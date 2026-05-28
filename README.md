@@ -22,6 +22,8 @@ monarch auth login you@example.com
 monarch auth status
 monarch auth export ~/monarch-session.json
 monarch auth logout
+monarch accounts list
+monarch accounts get ACCOUNT_ID
 ```
 
 Use layered help to drill into the CLI:
@@ -29,5 +31,6 @@ Use layered help to drill into the CLI:
 ```bash
 monarch --help
 monarch auth --help
+monarch accounts --help
 monarch auth login --help
 ```

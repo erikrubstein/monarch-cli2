@@ -8,22 +8,13 @@ from monarch_api import MfaRequiredError, create_session, load_session
 
 from monarch_cli.config import delete_session, has_session, resolve_session_path, write_session
 from monarch_cli.errors import handle_cli_errors
+from monarch_cli.options import JsonOption, SessionPathOption
 from monarch_cli.output import print_key_values, print_success, print_warning
 
 app = typer.Typer(
     help="Sign in, inspect, and manage saved sessions.",
     no_args_is_help=True,
 )
-
-
-SessionPathOption = Annotated[
-    Path | None,
-    typer.Option(
-        "--session-path",
-        "-s",
-        help="Path to the saved session file.",
-    ),
-]
 
 
 @app.command("login")
@@ -52,10 +43,7 @@ def login(
         ),
     ] = False,
     session_path: SessionPathOption = None,
-    json_output: Annotated[
-        bool,
-        typer.Option("--json", help="Print machine-readable JSON."),
-    ] = False,
+    json_output: JsonOption = False,
 ) -> None:
     """Sign in and save an authenticated session."""
     path = resolve_session_path(session_path)
@@ -94,10 +82,7 @@ def login(
 @handle_cli_errors
 def status(
     session_path: SessionPathOption = None,
-    json_output: Annotated[
-        bool,
-        typer.Option("--json", help="Print machine-readable JSON."),
-    ] = False,
+    json_output: JsonOption = False,
 ) -> None:
     """Show the currently saved session."""
     path = resolve_session_path(session_path)
@@ -123,10 +108,7 @@ def status(
 def use_session(
     source: Annotated[Path, typer.Argument(help="Session file to make active.")],
     session_path: SessionPathOption = None,
-    json_output: Annotated[
-        bool,
-        typer.Option("--json", help="Print machine-readable JSON."),
-    ] = False,
+    json_output: JsonOption = False,
 ) -> None:
     """Use an existing session file as the active session."""
     session = load_session(source.expanduser())
@@ -148,10 +130,7 @@ def use_session(
 def export_session(
     destination: Annotated[Path, typer.Argument(help="Where to write the session file.")],
     session_path: SessionPathOption = None,
-    json_output: Annotated[
-        bool,
-        typer.Option("--json", help="Print machine-readable JSON."),
-    ] = False,
+    json_output: JsonOption = False,
 ) -> None:
     """Copy the active session to another path."""
     source = resolve_session_path(session_path)

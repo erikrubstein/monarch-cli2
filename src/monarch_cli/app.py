@@ -5,6 +5,7 @@ from typing import Annotated
 import typer
 
 from monarch_cli import __version__
+from monarch_cli import accounts
 from monarch_cli import auth
 from monarch_cli.theme import configure_typer_help_styles, console
 
@@ -16,6 +17,7 @@ app = typer.Typer(
     rich_markup_mode="rich",
 )
 app.add_typer(auth.app, name="auth")
+app.add_typer(accounts.app, name="accounts")
 
 
 def version_callback(value: bool) -> None:

@@ -4,11 +4,13 @@ import dataclasses
 import json
 from enum import Enum
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable, Sequence
 
 from rich.table import Table
 
 from monarch_cli.theme import console
+
+Column = tuple[str, str]
 
 
 def render_json(value: Any, *, include_raw: bool = False) -> None:
@@ -59,6 +61,49 @@ def print_key_values(
     for key, value in rows.items():
         table.add_row(key, "" if value is None else str(value))
     console.print(table)
+
+
+def print_table(
+    title: str,
+    columns: Sequence[Column],
+    rows: Iterable[dict[str, object]],
+    *,
+    json_output: bool = False,
+    raw_output: bool = False,
+) -> None:
+    row_list = list(rows)
+    if json_output:
+        render_json(row_list, include_raw=raw_output)
+        return
+
+    table = Table(title=title, title_style="accent", border_style="grey35")
+    for header, style in columns:
+        table.add_column(header, style=style)
+    for row in row_list:
+        table.add_row(*(format_value(row.get(header)) for header, _style in columns))
+    console.print(table)
+
+
+def format_money(value: object) -> str:
+    if value is None:
+        return ""
+    try:
+        amount = float(value)
+    except (TypeError, ValueError):
+        return str(value)
+    return f"${amount:,.2f}"
+
+
+def format_bool(value: object) -> str:
+    if value is None:
+        return ""
+    return "yes" if bool(value) else "no"
+
+
+def format_value(value: object) -> str:
+    if value is None:
+        return ""
+    return str(value)
 
 
 def print_success(message: str) -> None:
