@@ -34,6 +34,7 @@ monarch reports data --start-date 2026-01-01 --end-date 2026-05-28
 monarch merchants list --search grocery
 monarch tags list
 monarch household current-user
+monarch categories list
 ```
 
 Use layered help to drill into the CLI:
@@ -49,5 +50,6 @@ monarch reports --help
 monarch merchants --help
 monarch tags --help
 monarch household --help
+monarch categories --help
 monarch auth login --help
 ```
