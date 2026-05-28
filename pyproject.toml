@@ -1,0 +1,27 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "monarch-cli2"
+version = "0.1.0"
+description = "Command line interface for Monarch Money."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "monarch-api2 @ git+https://github.com/erikrubstein/monarch-api2.git",
+  "rich>=13.7",
+  "typer>=0.12",
+]
+
+[project.scripts]
+monarch = "monarch_cli.app:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/monarch_cli"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
