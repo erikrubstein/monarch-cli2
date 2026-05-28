@@ -24,6 +24,8 @@ monarch auth export ~/monarch-session.json
 monarch auth logout
 monarch accounts list
 monarch accounts get ACCOUNT_ID
+monarch transactions list --limit 25
+monarch transactions get TRANSACTION_ID
 ```
 
 Use layered help to drill into the CLI:
@@ -32,5 +34,6 @@ Use layered help to drill into the CLI:
 monarch --help
 monarch auth --help
 monarch accounts --help
+monarch transactions --help
 monarch auth login --help
 ```

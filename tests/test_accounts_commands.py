@@ -24,7 +24,7 @@ def test_accounts_list_passes_filters(monkeypatch, tmp_path) -> None:
             )
         ]
 
-    monkeypatch.setattr("monarch_cli.accounts.list_accounts", fake_list_accounts)
+    monkeypatch.setattr("monarch_cli.groups.accounts.list_accounts", fake_list_accounts)
 
     result = runner.invoke(
         app,
@@ -59,7 +59,7 @@ def test_accounts_update_maps_value_options(monkeypatch, tmp_path) -> None:
         captured.update(kwargs)
         return Account(id=account_id, display_name="Updated")
 
-    monkeypatch.setattr("monarch_cli.accounts.update_account", fake_update_account)
+    monkeypatch.setattr("monarch_cli.groups.accounts.update_account", fake_update_account)
 
     result = runner.invoke(
         app,
@@ -94,7 +94,7 @@ def test_accounts_delete_respects_confirmation(monkeypatch, tmp_path) -> None:
         called = True
         return True
 
-    monkeypatch.setattr("monarch_cli.accounts.delete_account", fake_delete_account)
+    monkeypatch.setattr("monarch_cli.groups.accounts.delete_account", fake_delete_account)
 
     result = runner.invoke(
         app,

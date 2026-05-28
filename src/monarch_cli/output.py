@@ -11,6 +11,7 @@ from rich.table import Table
 from monarch_cli.theme import console
 
 Column = tuple[str, str]
+Number = int | float
 
 
 def render_json(value: Any, *, include_raw: bool = False) -> None:
@@ -84,7 +85,7 @@ def print_table(
     console.print(table)
 
 
-def format_money(value: object) -> str:
+def format_money(value: Number | str | None) -> str:
     if value is None:
         return ""
     try:
@@ -98,6 +99,24 @@ def format_bool(value: object) -> str:
     if value is None:
         return ""
     return "yes" if bool(value) else "no"
+
+
+def format_bytes(value: Number | str | None) -> str:
+    if value is None:
+        return ""
+    try:
+        size = int(value)
+    except (TypeError, ValueError):
+        return str(value)
+    units = ["B", "KB", "MB", "GB"]
+    amount = float(size)
+    for unit in units:
+        if amount < 1024 or unit == units[-1]:
+            if unit == "B":
+                return f"{int(amount)} {unit}"
+            return f"{amount:.1f} {unit}"
+        amount /= 1024
+    return str(size)
 
 
 def format_value(value: object) -> str:

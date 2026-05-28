@@ -185,7 +185,10 @@ def net_worth_performance_command(
 @handle_cli_errors
 def net_worth_breakdown_command(
     start_date: Annotated[str, typer.Argument(help="Start date, such as 2026-01-01.")],
-    timeframe: Annotated[str, typer.Argument(help="Monarch timeframe, such as month.")],
+    timeframe: Annotated[
+        str,
+        typer.Argument(help="Timeframe text. Common values: week, month, quarter, year."),
+    ],
     session_path: SessionPathOption = None,
     account_ids: FilterAccountIdsOption = None,
     account_types: FilterAccountTypesOption = None,

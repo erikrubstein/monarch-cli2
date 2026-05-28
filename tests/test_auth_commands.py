@@ -71,7 +71,7 @@ def test_auth_login_prompts_for_mfa_when_required(monkeypatch, tmp_path) -> None
             email=email,
         )
 
-    monkeypatch.setattr("monarch_cli.auth.create_session", fake_create_session)
+    monkeypatch.setattr("monarch_cli.groups.auth.create_session", fake_create_session)
 
     result = runner.invoke(
         app,
