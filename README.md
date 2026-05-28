@@ -28,6 +28,8 @@ monarch transactions list --limit 25
 monarch transactions get TRANSACTION_ID
 monarch receipts list
 monarch receipts get RECEIPT_ID
+monarch cashflow summary 2026-01-01 2026-05-28
+monarch cashflow trends 2026-01-01 2026-05-28
 ```
 
 Use layered help to drill into the CLI:
@@ -38,5 +40,6 @@ monarch auth --help
 monarch accounts --help
 monarch transactions --help
 monarch receipts --help
+monarch cashflow --help
 monarch auth login --help
 ```
