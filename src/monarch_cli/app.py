@@ -5,7 +5,7 @@ from typing import Annotated
 import typer
 
 from monarch_cli import __version__
-from monarch_cli.groups import accounts, auth, cashflow, merchants, receipts, reports, transactions
+from monarch_cli.groups import accounts, auth, cashflow, merchants, receipts, reports, tags, transactions
 from monarch_cli.theme import configure_typer_help_styles, console
 
 configure_typer_help_styles()
@@ -22,6 +22,7 @@ app.add_typer(receipts.app, name="receipts")
 app.add_typer(cashflow.app, name="cashflow")
 app.add_typer(reports.app, name="reports")
 app.add_typer(merchants.app, name="merchants")
+app.add_typer(tags.app, name="tags")
 
 
 def version_callback(value: bool) -> None:
