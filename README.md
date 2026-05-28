@@ -30,6 +30,7 @@ monarch receipts list
 monarch receipts get RECEIPT_ID
 monarch cashflow summary 2026-01-01 2026-05-28
 monarch cashflow trends 2026-01-01 2026-05-28
+monarch reports data --start-date 2026-01-01 --end-date 2026-05-28
 ```
 
 Use layered help to drill into the CLI:
@@ -41,5 +42,6 @@ monarch accounts --help
 monarch transactions --help
 monarch receipts --help
 monarch cashflow --help
+monarch reports --help
 monarch auth login --help
 ```
