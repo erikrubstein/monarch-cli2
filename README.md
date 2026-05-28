@@ -35,6 +35,7 @@ monarch merchants list --search grocery
 monarch tags list
 monarch household current-user
 monarch categories list
+monarch recurring list
 ```
 
 Use layered help to drill into the CLI:
@@ -51,5 +52,6 @@ monarch merchants --help
 monarch tags --help
 monarch household --help
 monarch categories --help
+monarch recurring --help
 monarch auth login --help
 ```
