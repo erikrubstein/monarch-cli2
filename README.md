@@ -38,6 +38,7 @@ monarch categories list
 monarch recurring list
 monarch investments portfolio
 monarch goals list
+monarch budget get 2026-05
 ```
 
 Use layered help to drill into the CLI:
@@ -57,5 +58,6 @@ monarch categories --help
 monarch recurring --help
 monarch investments --help
 monarch goals --help
+monarch budget --help
 monarch auth login --help
 ```
