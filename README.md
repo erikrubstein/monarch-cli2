@@ -37,6 +37,7 @@ monarch household current-user
 monarch categories list
 monarch recurring list
 monarch investments portfolio
+monarch goals list
 ```
 
 Use layered help to drill into the CLI:
@@ -55,5 +56,6 @@ monarch household --help
 monarch categories --help
 monarch recurring --help
 monarch investments --help
+monarch goals --help
 monarch auth login --help
 ```
