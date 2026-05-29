@@ -9,7 +9,7 @@ description = "Command line interface for Monarch Money."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-  "monarch-api2 @ git+https://github.com/erikrubstein/monarch-api2.git",
+  "monarch-api2 @ git+https://github.com/erikrubstein/monarch-api2.git@v0.1.0",
   "rich>=13.7",
   "typer>=0.12",
 ]
