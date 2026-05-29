@@ -16,6 +16,13 @@ THEME = Theme(
         "money.positive": "green3",
         "money.negative": "red3",
         "meta": "grey50",
+        "json.brace": "grey62",
+        "json.key": "bold steel_blue1",
+        "json.str": "grey78",
+        "json.number": "steel_blue3",
+        "json.bool_true": "grey70",
+        "json.bool_false": "grey70",
+        "json.null": "grey50",
     }
 )
 
