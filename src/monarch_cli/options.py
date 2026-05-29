@@ -1,9 +1,16 @@
 from __future__ import annotations
 
+from enum import Enum
 from pathlib import Path
 from typing import Annotated
 
 import typer
+
+
+class TrueFalseFilter(str, Enum):
+    TRUE = "true"
+    FALSE = "false"
+
 
 SessionPathOption = Annotated[
     Path | None,

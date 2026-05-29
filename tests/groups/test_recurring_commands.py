@@ -38,6 +38,7 @@ def test_recurring_list_passes_filters(monkeypatch, tmp_path) -> None:
             "--type",
             "expense",
             "--completed",
+            "false",
             "--exclude-pending",
             "--exclude-liabilities",
         ],
@@ -49,7 +50,7 @@ def test_recurring_list_passes_filters(monkeypatch, tmp_path) -> None:
         account_ids=["account-123"],
         frequencies=[RecurringFrequency.MONTHLY],
         recurring_types=[RecurringType.EXPENSE],
-        is_completed=True,
+        is_completed=False,
     )
     assert captured["include_pending"] is False
     assert captured["include_liabilities"] is False

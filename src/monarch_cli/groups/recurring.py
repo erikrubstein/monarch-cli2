@@ -23,7 +23,7 @@ from monarch_api import (
 )
 
 from monarch_cli.errors import handle_cli_errors
-from monarch_cli.options import JsonOption, RawOption, SessionPathOption
+from monarch_cli.options import JsonOption, RawOption, SessionPathOption, TrueFalseFilter
 from monarch_cli.output import format_bool, format_money, print_key_values, print_success, print_table, print_warning, render_json
 from monarch_cli.session import require_session
 
@@ -75,9 +75,9 @@ def list_command(
     frequencies: FrequencyOption = None,
     recurring_types: TypeOption = None,
     completed: Annotated[
-        bool,
-        typer.Option("--completed", help="Only include completed items."),
-    ] = False,
+        TrueFalseFilter | None,
+        typer.Option("--completed", help="Filter by completed status."),
+    ] = None,
     exclude_pending: Annotated[
         bool,
         typer.Option("--exclude-pending", help="Exclude pending recurring items."),
@@ -152,9 +152,9 @@ def occurrences_command(
     frequencies: FrequencyOption = None,
     recurring_types: TypeOption = None,
     completed: Annotated[
-        bool,
-        typer.Option("--completed", help="Only include completed occurrences."),
-    ] = False,
+        TrueFalseFilter | None,
+        typer.Option("--completed", help="Filter by completed status."),
+    ] = None,
     exclude_liabilities: Annotated[
         bool,
         typer.Option("--exclude-liabilities", help="Exclude liability items."),
@@ -198,9 +198,9 @@ def summary_command(
     frequencies: FrequencyOption = None,
     recurring_types: TypeOption = None,
     completed: Annotated[
-        bool,
-        typer.Option("--completed", help="Only include completed items."),
-    ] = False,
+        TrueFalseFilter | None,
+        typer.Option("--completed", help="Filter by completed status."),
+    ] = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
 ) -> None:
@@ -358,7 +358,7 @@ def _recurring_filter(
     recurring_ids: list[str] | None,
     frequencies: list[RecurringFrequency] | None,
     recurring_types: list[RecurringType] | None,
-    completed: bool,
+    completed: TrueFalseFilter | None,
 ) -> RecurringFilter | None:
     if not any(
         [
@@ -379,7 +379,7 @@ def _recurring_filter(
         recurring_ids=recurring_ids,
         frequencies=frequencies,
         recurring_types=recurring_types,
-        is_completed=True if completed else None,
+        is_completed=_true_false_value(completed),
     )
 
 
@@ -459,6 +459,12 @@ def _active_value(value: ActiveState | None) -> bool | None:
     if value is None:
         return None
     return value == ActiveState.ENABLED
+
+
+def _true_false_value(value: TrueFalseFilter | None) -> bool | None:
+    if value is None:
+        return None
+    return value == TrueFalseFilter.TRUE
 
 
 def _enum_value(value: Enum | str | None) -> str:

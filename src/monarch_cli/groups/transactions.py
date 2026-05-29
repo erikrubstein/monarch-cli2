@@ -34,7 +34,7 @@ from monarch_api import (
 
 from monarch_cli.errors import handle_cli_errors
 from monarch_cli.input import load_json_argument
-from monarch_cli.options import JsonOption, RawOption, SessionPathOption
+from monarch_cli.options import JsonOption, RawOption, SessionPathOption, TrueFalseFilter
 from monarch_cli.output import (
     format_bool,
     format_bytes,
@@ -126,46 +126,58 @@ def list_command(
     ] = None,
     credits_only: Annotated[bool, typer.Option("--credits-only", help="Only credits.")] = False,
     debits_only: Annotated[bool, typer.Option("--debits-only", help="Only debits.")] = False,
-    pending: Annotated[bool, typer.Option("--pending", help="Only pending transactions.")] = False,
+    pending: Annotated[
+        TrueFalseFilter | None,
+        typer.Option("--pending", help="Filter by pending status."),
+    ] = None,
     recurring: Annotated[
-        bool,
-        typer.Option("--recurring", help="Only recurring transactions."),
-    ] = False,
-    split: Annotated[bool, typer.Option("--split", help="Only split transactions.")] = False,
+        TrueFalseFilter | None,
+        typer.Option("--recurring", help="Filter by recurring status."),
+    ] = None,
+    split: Annotated[
+        TrueFalseFilter | None,
+        typer.Option("--split", help="Filter by split status."),
+    ] = None,
     uncategorized: Annotated[
-        bool,
-        typer.Option("--uncategorized", help="Only uncategorized transactions."),
-    ] = False,
-    untagged: Annotated[bool, typer.Option("--untagged", help="Only untagged transactions.")] = False,
-    has_notes: Annotated[bool, typer.Option("--has-notes", help="Only transactions with notes.")] = False,
+        TrueFalseFilter | None,
+        typer.Option("--uncategorized", help="Filter by uncategorized status."),
+    ] = None,
+    untagged: Annotated[
+        TrueFalseFilter | None,
+        typer.Option("--untagged", help="Filter by untagged status."),
+    ] = None,
+    has_notes: Annotated[
+        TrueFalseFilter | None,
+        typer.Option("--has-notes", help="Filter by whether notes are present."),
+    ] = None,
     has_attachments: Annotated[
-        bool,
-        typer.Option("--has-attachments", help="Only transactions with attachments."),
-    ] = False,
+        TrueFalseFilter | None,
+        typer.Option("--has-attachments", help="Filter by whether attachments are present."),
+    ] = None,
     hidden_from_reports: Annotated[
-        bool,
-        typer.Option("--hidden-from-reports", help="Only transactions hidden from reports."),
-    ] = False,
+        TrueFalseFilter | None,
+        typer.Option("--hidden-from-reports", help="Filter by report visibility."),
+    ] = None,
     needs_review: Annotated[
-        bool,
-        typer.Option("--needs-review", help="Only transactions that need review."),
-    ] = False,
+        TrueFalseFilter | None,
+        typer.Option("--needs-review", help="Filter by review status."),
+    ] = None,
     needs_review_by_user_id: Annotated[
         str | None,
         typer.Option("--needs-review-by-user-id", help="Needs-review assignee user id."),
     ] = None,
     needs_review_unassigned: Annotated[
-        bool,
-        typer.Option("--needs-review-unassigned", help="Only unassigned review items."),
-    ] = False,
+        TrueFalseFilter | None,
+        typer.Option("--needs-review-unassigned", help="Filter by unassigned review status."),
+    ] = None,
     synced_from_institution: Annotated[
-        bool,
-        typer.Option("--synced-from-institution", help="Only institution-synced transactions."),
-    ] = False,
+        TrueFalseFilter | None,
+        typer.Option("--synced-from-institution", help="Filter by institution sync status."),
+    ] = None,
     imported_from_mint: Annotated[
-        bool,
-        typer.Option("--imported-from-mint", help="Only Mint-imported transactions."),
-    ] = False,
+        TrueFalseFilter | None,
+        typer.Option("--imported-from-mint", help="Filter by Mint import status."),
+    ] = None,
     visibility: Annotated[
         TransactionVisibilityChoice | None,
         typer.Option("--visibility", help="Transaction visibility filter."),
@@ -650,19 +662,19 @@ def _transaction_filter(
     category_type: CategoryType | None,
     credits_only: bool,
     debits_only: bool,
-    pending: bool,
-    recurring: bool,
-    split: bool,
-    uncategorized: bool,
-    untagged: bool,
-    has_notes: bool,
-    has_attachments: bool,
-    hidden_from_reports: bool,
-    needs_review: bool,
+    pending: TrueFalseFilter | None,
+    recurring: TrueFalseFilter | None,
+    split: TrueFalseFilter | None,
+    uncategorized: TrueFalseFilter | None,
+    untagged: TrueFalseFilter | None,
+    has_notes: TrueFalseFilter | None,
+    has_attachments: TrueFalseFilter | None,
+    hidden_from_reports: TrueFalseFilter | None,
+    needs_review: TrueFalseFilter | None,
     needs_review_by_user_id: str | None,
-    needs_review_unassigned: bool,
-    synced_from_institution: bool,
-    imported_from_mint: bool,
+    needs_review_unassigned: TrueFalseFilter | None,
+    synced_from_institution: TrueFalseFilter | None,
+    imported_from_mint: TrueFalseFilter | None,
     visibility: TransactionVisibilityChoice | None,
 ) -> TransactionFilter | None:
     values = {
@@ -681,19 +693,19 @@ def _transaction_filter(
         "category_type": category_type,
         "credits_only": True if credits_only else None,
         "debits_only": True if debits_only else None,
-        "is_pending": True if pending else None,
-        "is_recurring": True if recurring else None,
-        "is_split": True if split else None,
-        "is_uncategorized": True if uncategorized else None,
-        "is_untagged": True if untagged else None,
-        "has_notes": True if has_notes else None,
-        "has_attachments": True if has_attachments else None,
-        "hide_from_reports": True if hidden_from_reports else None,
-        "needs_review": True if needs_review else None,
+        "is_pending": _true_false_value(pending),
+        "is_recurring": _true_false_value(recurring),
+        "is_split": _true_false_value(split),
+        "is_uncategorized": _true_false_value(uncategorized),
+        "is_untagged": _true_false_value(untagged),
+        "has_notes": _true_false_value(has_notes),
+        "has_attachments": _true_false_value(has_attachments),
+        "hide_from_reports": _true_false_value(hidden_from_reports),
+        "needs_review": _true_false_value(needs_review),
         "needs_review_by_user_id": needs_review_by_user_id,
-        "needs_review_unassigned": True if needs_review_unassigned else None,
-        "synced_from_institution": True if synced_from_institution else None,
-        "imported_from_mint": True if imported_from_mint else None,
+        "needs_review_unassigned": _true_false_value(needs_review_unassigned),
+        "synced_from_institution": _true_false_value(synced_from_institution),
+        "imported_from_mint": _true_false_value(imported_from_mint),
         "transaction_visibility": _transaction_visibility(visibility),
     }
     if not any(value is not None and value != [] for value in values.values()):
@@ -787,6 +799,12 @@ def _hide_from_reports_value(value: ReportVisibility | None) -> bool | None:
     if value is None:
         return None
     return value == ReportVisibility.HIDDEN
+
+
+def _true_false_value(value: TrueFalseFilter | None) -> bool | None:
+    if value is None:
+        return None
+    return value == TrueFalseFilter.TRUE
 
 
 def _split_drafts(data: Any) -> list[TransactionSplitDraft]:

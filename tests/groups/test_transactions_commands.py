@@ -58,6 +58,9 @@ def test_transactions_list_passes_filters(monkeypatch, tmp_path) -> None:
             "--account-id",
             "account-123",
             "--needs-review",
+            "true",
+            "--pending",
+            "false",
             "--limit",
             "25",
             "--offset",
@@ -73,6 +76,7 @@ def test_transactions_list_passes_filters(monkeypatch, tmp_path) -> None:
     assert captured["filters"] == TransactionFilter(
         start_date="2026-05-01",
         account_ids=["account-123"],
+        is_pending=False,
         needs_review=True,
     )
 
