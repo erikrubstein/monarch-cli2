@@ -70,7 +70,6 @@ def test_transactions_list_passes_filters(monkeypatch, tmp_path) -> None:
 
     assert result.exit_code == 0
     assert "Coffee" in result.output
-    assert "memo" in result.output
     assert captured["limit"] == 25
     assert captured["offset"] == 5
     assert captured["filters"] == TransactionFilter(

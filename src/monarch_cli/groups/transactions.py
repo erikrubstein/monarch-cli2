@@ -626,7 +626,6 @@ _TRANSACTION_COLUMNS = [
     ("category", "muted"),
     ("review", "muted"),
     ("pending", "muted"),
-    ("notes", "muted"),
 ]
 _SPLIT_COLUMNS = [
     ("id", "meta"),
@@ -735,7 +734,6 @@ def _transaction_row(transaction: Transaction) -> dict[str, object]:
         "category": transaction.category.name if transaction.category else None,
         "review": _enum_value(transaction.review_status),
         "pending": format_bool(transaction.pending),
-        "notes": transaction.notes,
     }
 
 
