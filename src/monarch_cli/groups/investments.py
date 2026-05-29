@@ -24,7 +24,7 @@ from monarch_api import (
 )
 
 from monarch_cli.errors import handle_cli_errors
-from monarch_cli.options import JsonOption, RawOption, SessionPathOption
+from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, SessionPathOption
 from monarch_cli.output import format_bool, format_money, print_key_values, print_success, print_table, print_warning, render_json
 from monarch_cli.session import require_session
 
@@ -45,6 +45,7 @@ def accounts_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """List investment accounts."""
     session = require_session(session_path)
@@ -52,7 +53,7 @@ def accounts_command(
     if json_output:
         render_json(accounts, include_raw=raw_output)
         return
-    print_table("Investment Accounts", _ACCOUNT_COLUMNS, (_account_row(account) for account in accounts))
+    print_table("Investment Accounts", _ACCOUNT_COLUMNS, (_account_row(account) for account in accounts), source_rows=accounts)
 
 
 @app.command("portfolio")
@@ -72,6 +73,7 @@ def portfolio_command(
     ] = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Show portfolio summary."""
     session = require_session(session_path)
@@ -87,8 +89,8 @@ def portfolio_command(
         render_json(portfolio, include_raw=raw_output)
         return
     print_key_values("Portfolio", _portfolio_details(portfolio))
-    print_table("Allocations", _ALLOCATION_COLUMNS, (_allocation_row(row) for row in portfolio.allocations))
-    print_table("Holdings", _HOLDING_COLUMNS, (_holding_row(holding) for holding in portfolio.holdings))
+    print_table("Allocations", _ALLOCATION_COLUMNS, (_allocation_row(row) for row in portfolio.allocations), source_rows=portfolio.allocations)
+    print_table("Holdings", _HOLDING_COLUMNS, (_holding_row(holding) for holding in portfolio.holdings), source_rows=portfolio.holdings)
 
 
 @app.command("holdings")
@@ -102,6 +104,7 @@ def holdings_command(
     ] = False,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """List holdings."""
     session = require_session(session_path)
@@ -113,7 +116,7 @@ def holdings_command(
     if json_output:
         render_json(holdings, include_raw=raw_output)
         return
-    print_table("Holdings", _HOLDING_COLUMNS, (_holding_row(holding) for holding in holdings))
+    print_table("Holdings", _HOLDING_COLUMNS, (_holding_row(holding) for holding in holdings), source_rows=holdings)
 
 
 @app.command("get-holding")
@@ -123,6 +126,7 @@ def get_holding_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Show one holding."""
     session = require_session(session_path)
@@ -135,7 +139,7 @@ def get_holding_command(
         return
     print_key_values("Holding", _holding_details(holding))
     if holding.tax_lots:
-        print_table("Tax Lots", _TAX_LOT_COLUMNS, (_tax_lot_row(lot) for lot in holding.tax_lots))
+        print_table("Tax Lots", _TAX_LOT_COLUMNS, (_tax_lot_row(lot) for lot in holding.tax_lots), source_rows=holding.tax_lots)
 
 
 @app.command("search-securities")
@@ -150,6 +154,7 @@ def search_securities_command(
     ] = False,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Search securities."""
     session = require_session(session_path)
@@ -162,7 +167,7 @@ def search_securities_command(
     if json_output:
         render_json(securities, include_raw=raw_output)
         return
-    print_table("Securities", _SECURITY_COLUMNS, (_security_row(security) for security in securities))
+    print_table("Securities", _SECURITY_COLUMNS, (_security_row(security) for security in securities), source_rows=securities)
 
 
 @app.command("get-security")
@@ -172,6 +177,7 @@ def get_security_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Show one security."""
     session = require_session(session_path)
@@ -194,6 +200,7 @@ def holding_performance_command(
     end_date: Annotated[str | None, typer.Option("--end-date", help="End date.")] = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Show holding performance."""
     session = require_session(session_path)
@@ -211,7 +218,7 @@ def holding_performance_command(
         return
     if performance.security is not None:
         print_key_values("Security", _security_details(performance.security))
-    print_table("Performance", _PERFORMANCE_COLUMNS, (_performance_row(point) for point in performance.points))
+    print_table("Performance", _PERFORMANCE_COLUMNS, (_performance_row(point) for point in performance.points), source_rows=performance.points)
 
 
 @app.command("create-holding")
@@ -224,6 +231,7 @@ def create_holding_command(
     cost_basis: Annotated[float | None, typer.Option("--cost-basis", help="Cost basis.")] = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Create a manual holding."""
     session = require_session(session_path)
@@ -253,6 +261,7 @@ def update_holding_command(
     ] = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Update a manual holding."""
     session = require_session(session_path)
@@ -276,6 +285,7 @@ def delete_holding_command(
     session_path: SessionPathOption = None,
     yes: Annotated[bool, typer.Option("--yes", "-y", help="Skip the confirmation prompt.")] = False,
     json_output: JsonOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Delete a manual holding."""
     session = require_session(session_path)

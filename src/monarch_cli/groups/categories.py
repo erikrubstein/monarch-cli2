@@ -26,7 +26,7 @@ from monarch_api import (
 )
 
 from monarch_cli.errors import handle_cli_errors
-from monarch_cli.options import JsonOption, RawOption, SessionPathOption
+from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, SessionPathOption
 from monarch_cli.output import format_bool, print_key_values, print_success, print_table, print_warning, render_json
 from monarch_cli.session import require_session
 
@@ -57,6 +57,7 @@ def list_command(
     ] = False,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """List categories."""
     session = require_session(session_path)
@@ -68,7 +69,7 @@ def list_command(
     if json_output:
         render_json(categories, include_raw=raw_output)
         return
-    print_table("Categories", _CATEGORY_COLUMNS, (_category_row(category) for category in categories))
+    print_table("Categories", _CATEGORY_COLUMNS, (_category_row(category) for category in categories), source_rows=categories)
 
 
 @app.command("list-groups")
@@ -77,6 +78,7 @@ def list_groups_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """List category groups."""
     session = require_session(session_path)
@@ -84,7 +86,7 @@ def list_groups_command(
     if json_output:
         render_json(groups, include_raw=raw_output)
         return
-    print_table("Category Groups", _GROUP_COLUMNS, (_group_row(group) for group in groups))
+    print_table("Category Groups", _GROUP_COLUMNS, (_group_row(group) for group in groups), source_rows=groups)
 
 
 @app.command("catalog")
@@ -97,6 +99,7 @@ def catalog_command(
     ] = False,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Show the category catalog."""
     session = require_session(session_path)
@@ -104,8 +107,8 @@ def catalog_command(
     if json_output:
         render_json(catalog, include_raw=raw_output)
         return
-    print_table("Category Groups", _GROUP_COLUMNS, (_group_row(group) for group in catalog.groups))
-    print_table("Categories", _CATEGORY_COLUMNS, (_category_row(category) for category in catalog.categories))
+    print_table("Category Groups", _GROUP_COLUMNS, (_group_row(group) for group in catalog.groups), source_rows=catalog.groups)
+    print_table("Categories", _CATEGORY_COLUMNS, (_category_row(category) for category in catalog.categories), source_rows=catalog.categories)
 
 
 @app.command("get")
@@ -115,6 +118,7 @@ def get_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Show one category."""
     session = require_session(session_path)
@@ -135,6 +139,7 @@ def get_group_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Show one category group."""
     session = require_session(session_path)
@@ -157,6 +162,7 @@ def create_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Create a category."""
     session = require_session(session_path)
@@ -177,6 +183,7 @@ def update_command(
     icon: Annotated[str | None, typer.Option("--icon", help="Category icon.")] = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Update a category."""
     session = require_session(session_path)
@@ -198,6 +205,7 @@ def remove_command(
     ] = None,
     yes: Annotated[bool, typer.Option("--yes", "-y", help="Skip the confirmation prompt.")] = False,
     json_output: JsonOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Remove a category."""
     session = require_session(session_path)
@@ -221,6 +229,7 @@ def reactivate_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Reactivate a category."""
     session = require_session(session_path)
@@ -240,6 +249,7 @@ def reorder_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Reorder a category."""
     session = require_session(session_path)
@@ -258,6 +268,7 @@ def create_group_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Create a category group."""
     session = require_session(session_path)
@@ -280,6 +291,7 @@ def update_group_command(
     ] = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Update a category group."""
     session = require_session(session_path)
@@ -301,6 +313,7 @@ def delete_group_command(
     ] = None,
     yes: Annotated[bool, typer.Option("--yes", "-y", help="Skip the confirmation prompt.")] = False,
     json_output: JsonOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Delete a category group."""
     session = require_session(session_path)
@@ -325,6 +338,7 @@ def reorder_group_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Reorder a category group."""
     session = require_session(session_path)
@@ -332,7 +346,7 @@ def reorder_group_command(
     if json_output:
         render_json(groups, include_raw=raw_output)
         return
-    print_table("Category Groups Reordered", _GROUP_COLUMNS, (_group_row(group) for group in groups))
+    print_table("Category Groups Reordered", _GROUP_COLUMNS, (_group_row(group) for group in groups), source_rows=groups)
 
 
 _CATEGORY_COLUMNS = [

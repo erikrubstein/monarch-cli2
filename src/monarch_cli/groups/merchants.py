@@ -13,7 +13,7 @@ from monarch_api import (
 )
 
 from monarch_cli.errors import handle_cli_errors
-from monarch_cli.options import JsonOption, RawOption, SessionPathOption
+from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, SessionPathOption
 from monarch_cli.output import format_bool, print_key_values, print_success, print_table, print_warning, render_json
 from monarch_cli.session import require_session
 
@@ -36,6 +36,7 @@ def list_command(
     ] = MerchantSort.TRANSACTION_COUNT,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """List merchants."""
     session = require_session(session_path)
@@ -49,7 +50,7 @@ def list_command(
     if json_output:
         render_json(merchants, include_raw=raw_output)
         return
-    print_table("Merchants", _MERCHANT_COLUMNS, (_merchant_row(merchant) for merchant in merchants))
+    print_table("Merchants", _MERCHANT_COLUMNS, (_merchant_row(merchant) for merchant in merchants), source_rows=merchants)
 
 
 @app.command("get")
@@ -59,6 +60,7 @@ def get_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Show one merchant."""
     session = require_session(session_path)
@@ -80,6 +82,7 @@ def update_command(
     name: Annotated[str | None, typer.Option("--name", help="Merchant name.")] = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Update a merchant."""
     session = require_session(session_path)
@@ -104,6 +107,7 @@ def delete_command(
         typer.Option("--yes", "-y", help="Skip the confirmation prompt."),
     ] = False,
     json_output: JsonOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Delete a merchant."""
     session = require_session(session_path)

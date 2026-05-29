@@ -112,6 +112,14 @@ Use `--json --raw` when you also want raw response data retained in the JSON:
 monarch transactions get TRANSACTION_ID --json --raw
 ```
 
+Use `--fields` on a command to show a comma-separated set of output fields.
+Dotted paths can select nested values:
+
+```bash
+monarch transactions list --fields id,date,amount,notes
+monarch transactions list --json --fields id,merchant.name,category.name
+```
+
 ## Development
 
 Run the test suite:

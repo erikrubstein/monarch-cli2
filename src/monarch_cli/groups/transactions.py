@@ -34,7 +34,7 @@ from monarch_api import (
 
 from monarch_cli.errors import handle_cli_errors
 from monarch_cli.input import load_json_argument
-from monarch_cli.options import JsonOption, RawOption, SessionPathOption, TrueFalseFilter
+from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, SessionPathOption, TrueFalseFilter
 from monarch_cli.output import (
     format_bool,
     format_bytes,
@@ -190,6 +190,7 @@ def list_command(
     ] = TransactionSort.DATE_DESCENDING,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """List transactions."""
     session = require_session(session_path)
@@ -237,6 +238,7 @@ def list_command(
         f"Transactions ({page.total_count} total)",
         _TRANSACTION_COLUMNS,
         (_transaction_row(transaction) for transaction in page.transactions),
+        source_rows=page.transactions,
     )
 
 
@@ -251,6 +253,7 @@ def get_command(
     ] = False,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Show one transaction."""
     session = require_session(session_path)
@@ -289,6 +292,7 @@ def create_command(
     goal_id: Annotated[str | None, typer.Option("--goal-id", help="Goal id.")] = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Create a manual transaction."""
     session = require_session(session_path)
@@ -345,6 +349,7 @@ def update_command(
     clear_goal: Annotated[bool, typer.Option("--clear-goal", help="Remove goal link.")] = False,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Update a transaction."""
     session = require_session(session_path)
@@ -381,6 +386,7 @@ def delete_command(
         typer.Option("--yes", "-y", help="Skip the confirmation prompt."),
     ] = False,
     json_output: JsonOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Delete a transaction."""
     session = require_session(session_path)
@@ -404,6 +410,7 @@ def get_splits_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Show split details for a transaction."""
     session = require_session(session_path)
@@ -414,7 +421,7 @@ def get_splits_command(
     if json_output:
         render_json(details, include_raw=raw_output)
         return
-    print_table("Transaction Splits", _SPLIT_COLUMNS, (_split_row(split) for split in details.splits))
+    print_table("Transaction Splits", _SPLIT_COLUMNS, (_split_row(split) for split in details.splits), source_rows=details.splits)
 
 
 @app.command("update-splits")
@@ -432,6 +439,7 @@ def update_splits_command(
     ] = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Replace transaction splits."""
     session = require_session(session_path)
@@ -444,7 +452,7 @@ def update_splits_command(
     if json_output:
         render_json(details, include_raw=raw_output)
         return
-    print_table("Transaction Splits Updated", _SPLIT_COLUMNS, (_split_row(split) for split in details.splits))
+    print_table("Transaction Splits Updated", _SPLIT_COLUMNS, (_split_row(split) for split in details.splits), source_rows=details.splits)
 
 
 @app.command("unsplit")
@@ -458,6 +466,7 @@ def unsplit_command(
     ] = False,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Remove transaction splits."""
     session = require_session(session_path)
@@ -468,7 +477,7 @@ def unsplit_command(
     if json_output:
         render_json(details, include_raw=raw_output)
         return
-    print_table("Transaction Splits Removed", _SPLIT_COLUMNS, (_split_row(split) for split in details.splits))
+    print_table("Transaction Splits Removed", _SPLIT_COLUMNS, (_split_row(split) for split in details.splits), source_rows=details.splits)
 
 
 @app.command("list-attachments")
@@ -482,6 +491,7 @@ def list_attachments_command(
     ] = False,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """List attachments for a transaction."""
     session = require_session(session_path)
@@ -497,6 +507,7 @@ def list_attachments_command(
         "Transaction Attachments",
         _ATTACHMENT_COLUMNS,
         (_attachment_row(attachment) for attachment in attachments),
+        source_rows=attachments,
     )
 
 
@@ -507,6 +518,7 @@ def get_attachment_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Show one transaction attachment."""
     session = require_session(session_path)
@@ -536,6 +548,7 @@ def upload_attachment_command(
     ] = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Upload a transaction attachment."""
     session = require_session(session_path)
@@ -562,6 +575,7 @@ def download_attachment_command(
     ] = None,
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Download a transaction attachment."""
     session = require_session(session_path)
@@ -601,6 +615,7 @@ def delete_attachment_command(
         typer.Option("--yes", "-y", help="Skip the confirmation prompt."),
     ] = False,
     json_output: JsonOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Delete a transaction attachment."""
     session = require_session(session_path)

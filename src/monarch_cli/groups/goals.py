@@ -30,7 +30,7 @@ from monarch_api import (
 )
 
 from monarch_cli.errors import handle_cli_errors
-from monarch_cli.options import JsonOption, RawOption, SessionPathOption
+from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, SessionPathOption
 from monarch_cli.output import format_bool, format_money, print_key_values, print_success, print_table, print_warning, render_json
 from monarch_cli.session import require_session
 
@@ -60,6 +60,7 @@ def list_command(
     ] = False,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """List goals."""
     session = require_session(session_path)
@@ -67,7 +68,7 @@ def list_command(
     if json_output:
         render_json(goals, include_raw=raw_output)
         return
-    print_table("Goals", _GOAL_COLUMNS, (_goal_row(goal) for goal in goals))
+    print_table("Goals", _GOAL_COLUMNS, (_goal_row(goal) for goal in goals), source_rows=goals)
 
 
 @app.command("get")
@@ -77,6 +78,7 @@ def get_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Show one goal."""
     session = require_session(session_path)
@@ -89,7 +91,7 @@ def get_command(
         return
     print_key_values("Goal", _goal_details(goal))
     if goal.account_balance_links:
-        print_table("Linked Accounts", _LINK_COLUMNS, (_link_row(link) for link in goal.account_balance_links))
+        print_table("Linked Accounts", _LINK_COLUMNS, (_link_row(link) for link in goal.account_balance_links), source_rows=goal.account_balance_links)
 
 
 @app.command("create")
@@ -119,6 +121,7 @@ def create_command(
     ] = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Create a goal."""
     session = require_session(session_path)
@@ -169,6 +172,7 @@ def update_command(
     ] = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Update a goal."""
     session = require_session(session_path)
@@ -199,6 +203,7 @@ def delete_command(
     session_path: SessionPathOption = None,
     yes: Annotated[bool, typer.Option("--yes", "-y", help="Skip the confirmation prompt.")] = False,
     json_output: JsonOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Delete a goal."""
     session = require_session(session_path)
@@ -222,6 +227,7 @@ def archive_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Archive a goal."""
     session = require_session(session_path)
@@ -239,6 +245,7 @@ def restore_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Restore an archived goal."""
     session = require_session(session_path)
@@ -256,6 +263,7 @@ def priorities_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Update goal priorities."""
     session = require_session(session_path)
@@ -263,7 +271,7 @@ def priorities_command(
     if json_output:
         render_json(goals, include_raw=raw_output)
         return
-    print_table("Goal Priorities", _GOAL_COLUMNS, (_goal_row(goal) for goal in goals))
+    print_table("Goal Priorities", _GOAL_COLUMNS, (_goal_row(goal) for goal in goals), source_rows=goals)
 
 
 @app.command("link-account")
@@ -278,6 +286,7 @@ def link_account_command(
     ] = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Link an account balance to a goal."""
     session = require_session(session_path)
@@ -302,6 +311,7 @@ def unlink_account_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Unlink an account from a goal."""
     session = require_session(session_path)
@@ -319,6 +329,7 @@ def events_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """List goal events."""
     session = require_session(session_path)
@@ -326,7 +337,7 @@ def events_command(
     if json_output:
         render_json(events, include_raw=raw_output)
         return
-    print_table("Goal Events", _EVENT_COLUMNS, (_event_row(event) for event in events))
+    print_table("Goal Events", _EVENT_COLUMNS, (_event_row(event) for event in events), source_rows=events)
 
 
 @app.command("contribute")
@@ -344,6 +355,7 @@ def contribute_command(
     notes: Annotated[str | None, typer.Option("--notes", help="Event notes.")] = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Add a goal contribution."""
     session = require_session(session_path)
@@ -377,6 +389,7 @@ def withdraw_command(
     notes: Annotated[str | None, typer.Option("--notes", help="Event notes.")] = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Add a goal withdrawal."""
     session = require_session(session_path)
@@ -408,6 +421,7 @@ def update_event_command(
     notes: Annotated[str | None, typer.Option("--notes", help="Event notes.")] = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Update a goal event."""
     session = require_session(session_path)
@@ -431,6 +445,7 @@ def delete_event_command(
     session_path: SessionPathOption = None,
     yes: Annotated[bool, typer.Option("--yes", "-y", help="Skip the confirmation prompt.")] = False,
     json_output: JsonOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Delete a goal event."""
     session = require_session(session_path)
@@ -456,6 +471,7 @@ def budget_amounts_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """List goal budget amounts."""
     session = require_session(session_path)
@@ -463,7 +479,7 @@ def budget_amounts_command(
     if json_output:
         render_json(amounts, include_raw=raw_output)
         return
-    print_table("Goal Budget Amounts", _BUDGET_COLUMNS, (_budget_row(amount) for amount in amounts))
+    print_table("Goal Budget Amounts", _BUDGET_COLUMNS, (_budget_row(amount) for amount in amounts), source_rows=amounts)
 
 
 @app.command("set-budget-amount")
@@ -479,6 +495,7 @@ def set_budget_amount_command(
     ] = False,
     account_id: Annotated[str | None, typer.Option("--account-id", help="Account id.")] = None,
     json_output: JsonOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Set a goal budget amount."""
     session = require_session(session_path)

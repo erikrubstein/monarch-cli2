@@ -24,7 +24,7 @@ from monarch_api import (
 )
 
 from monarch_cli.errors import handle_cli_errors
-from monarch_cli.options import JsonOption, RawOption, SessionPathOption
+from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, SessionPathOption
 from monarch_cli.output import (
     format_bool,
     format_money,
@@ -90,6 +90,7 @@ def list_command(
     include_deleted: IncludeDeletedOption = False,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """List accounts."""
     session = require_session(session_path)
@@ -107,7 +108,7 @@ def list_command(
     if json_output:
         render_json(accounts, include_raw=raw_output)
         return
-    print_table("Accounts", _ACCOUNT_COLUMNS, (_account_row(account) for account in accounts))
+    print_table("Accounts", _ACCOUNT_COLUMNS, (_account_row(account) for account in accounts), source_rows=accounts)
 
 
 @app.command("get")
@@ -117,6 +118,7 @@ def get_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Show one account."""
     session = require_session(session_path)
@@ -154,6 +156,7 @@ def net_worth_performance_command(
     include_deleted: IncludeDeletedOption = False,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Show net worth over time."""
     session = require_session(session_path)
@@ -178,6 +181,7 @@ def net_worth_performance_command(
         "Net Worth Performance",
         _NET_WORTH_PERFORMANCE_COLUMNS,
         (_net_worth_snapshot_row(snapshot) for snapshot in snapshots),
+        source_rows=snapshots,
     )
 
 
@@ -198,6 +202,7 @@ def net_worth_breakdown_command(
     include_deleted: IncludeDeletedOption = False,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Show net worth broken down by account type."""
     session = require_session(session_path)
@@ -221,6 +226,7 @@ def net_worth_breakdown_command(
         "Net Worth Breakdown",
         _NET_WORTH_BREAKDOWN_COLUMNS,
         (_net_worth_breakdown_row(point) for point in points),
+        source_rows=points,
     )
 
 
@@ -237,6 +243,7 @@ def historical_balances_command(
     include_deleted: IncludeDeletedOption = False,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Show account balances on a historical date."""
     session = require_session(session_path)
@@ -259,6 +266,7 @@ def historical_balances_command(
         "Historical Balances",
         _HISTORICAL_BALANCE_COLUMNS,
         (_account_balance_row(balance) for balance in balances),
+        source_rows=balances,
     )
 
 
@@ -269,6 +277,7 @@ def history_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Show balance history for one account."""
     session = require_session(session_path)
@@ -280,6 +289,7 @@ def history_command(
         "Account History",
         _ACCOUNT_HISTORY_COLUMNS,
         (_account_history_row(point) for point in points),
+        source_rows=points,
     )
 
 
@@ -303,6 +313,7 @@ def create_manual_command(
         typer.Option("--owner-user-id", help="Owner user id."),
     ] = None,
     json_output: JsonOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Create a manual account."""
     session = require_session(session_path)
@@ -362,6 +373,7 @@ def update_command(
     ] = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Update an account."""
     session = require_session(session_path)
@@ -394,6 +406,7 @@ def delete_command(
         typer.Option("--yes", "-y", help="Skip the confirmation prompt."),
     ] = False,
     json_output: JsonOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Delete an account."""
     session = require_session(session_path)

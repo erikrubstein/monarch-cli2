@@ -8,7 +8,7 @@ from monarch_api import MfaRequiredError, create_session, load_session
 
 from monarch_cli.config import delete_session, has_session, resolve_session_path, write_session
 from monarch_cli.errors import handle_cli_errors
-from monarch_cli.options import JsonOption, SessionPathOption
+from monarch_cli.options import JsonOption, SessionPathOption, OutputFieldsOption
 from monarch_cli.output import print_key_values, print_success, print_warning
 
 app = typer.Typer(
@@ -44,6 +44,7 @@ def login(
     ] = False,
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Sign in and save an authenticated session."""
     path = resolve_session_path(session_path)
@@ -83,6 +84,7 @@ def login(
 def status(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Show the currently saved session."""
     path = resolve_session_path(session_path)
@@ -109,6 +111,7 @@ def use_session(
     source: Annotated[Path, typer.Argument(help="Session file to make active.")],
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Use an existing session file as the active session."""
     session = load_session(source.expanduser())
@@ -131,6 +134,7 @@ def export_session(
     destination: Annotated[Path, typer.Argument(help="Where to write the session file.")],
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Copy the active session to another path."""
     source = resolve_session_path(session_path)

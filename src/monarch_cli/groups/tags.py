@@ -14,7 +14,7 @@ from monarch_api import (
 )
 
 from monarch_cli.errors import handle_cli_errors
-from monarch_cli.options import JsonOption, RawOption, SessionPathOption
+from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, SessionPathOption
 from monarch_cli.output import print_key_values, print_success, print_table, print_warning, render_json
 from monarch_cli.session import require_session
 
@@ -36,6 +36,7 @@ def list_command(
     ] = False,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """List tags."""
     session = require_session(session_path)
@@ -48,7 +49,7 @@ def list_command(
     if json_output:
         render_json(tags, include_raw=raw_output)
         return
-    print_table("Tags", _TAG_COLUMNS, (_tag_row(tag) for tag in tags))
+    print_table("Tags", _TAG_COLUMNS, (_tag_row(tag) for tag in tags), source_rows=tags)
 
 
 @app.command("get")
@@ -58,6 +59,7 @@ def get_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Show one tag."""
     session = require_session(session_path)
@@ -79,6 +81,7 @@ def create_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Create a tag."""
     session = require_session(session_path)
@@ -98,6 +101,7 @@ def update_command(
     color: Annotated[str | None, typer.Option("--color", help="Tag color.")] = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Update a tag."""
     session = require_session(session_path)
@@ -118,6 +122,7 @@ def delete_command(
         typer.Option("--yes", "-y", help="Skip the confirmation prompt."),
     ] = False,
     json_output: JsonOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Delete a tag."""
     session = require_session(session_path)
@@ -142,6 +147,7 @@ def reorder_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Reorder a tag."""
     session = require_session(session_path)
@@ -149,7 +155,7 @@ def reorder_command(
     if json_output:
         render_json(tags, include_raw=raw_output)
         return
-    print_table("Tags Reordered", _TAG_COLUMNS, (_tag_row(tag) for tag in tags))
+    print_table("Tags Reordered", _TAG_COLUMNS, (_tag_row(tag) for tag in tags), source_rows=tags)
 
 
 _TAG_COLUMNS = [

@@ -40,7 +40,7 @@ from monarch_api import (
 )
 
 from monarch_cli.errors import handle_cli_errors
-from monarch_cli.options import JsonOption, RawOption, SessionPathOption
+from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, SessionPathOption
 from monarch_cli.output import format_bool, format_money, print_key_values, print_success, print_table, print_warning, render_json
 from monarch_cli.session import require_session
 
@@ -62,6 +62,7 @@ def get_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Show one budget month."""
     session = require_session(session_path)
@@ -80,6 +81,7 @@ def months_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """List budget months."""
     session = require_session(session_path)
@@ -87,7 +89,7 @@ def months_command(
     if json_output:
         render_json(budgets, include_raw=raw_output)
         return
-    print_table("Budget Months", _MONTH_COLUMNS, (_month_row(budget) for budget in budgets))
+    print_table("Budget Months", _MONTH_COLUMNS, (_month_row(budget) for budget in budgets), source_rows=budgets)
 
 
 @app.command("settings")
@@ -96,6 +98,7 @@ def settings_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Show budget settings."""
     session = require_session(session_path)
@@ -114,6 +117,7 @@ def category_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Show one budget category."""
     session = require_session(session_path)
@@ -133,6 +137,7 @@ def flex_rollover_settings_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Show flex rollover settings."""
     session = require_session(session_path)
@@ -157,6 +162,7 @@ def set_amount_command(
     default_amount: Annotated[float | None, typer.Option("--default-amount", help="Default amount.")] = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Set a category budget amount."""
     session = require_session(session_path)
@@ -188,6 +194,7 @@ def set_group_amount_command(
     default_amount: Annotated[float | None, typer.Option("--default-amount", help="Default amount.")] = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Set a category group budget amount."""
     session = require_session(session_path)
@@ -218,6 +225,7 @@ def set_flex_amount_command(
     default_amount: Annotated[float | None, typer.Option("--default-amount", help="Default amount.")] = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Set a flex budget amount."""
     session = require_session(session_path)
@@ -242,6 +250,7 @@ def set_category_variability_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Set category budget variability."""
     session = require_session(session_path)
@@ -260,6 +269,7 @@ def set_group_variability_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Set category group budget variability."""
     session = require_session(session_path)
@@ -293,6 +303,7 @@ def set_category_rollover_command(
     ] = False,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Set category rollover settings."""
     session = require_session(session_path)
@@ -327,6 +338,7 @@ def set_group_rollover_command(
     ] = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Set category group rollover settings."""
     session = require_session(session_path)
@@ -353,6 +365,7 @@ def set_flex_rollover_command(
     starting_balance: Annotated[float | None, typer.Option("--starting-balance", help="Starting balance.")] = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Set flex rollover settings."""
     session = require_session(session_path)
@@ -378,6 +391,7 @@ def reset_rollover_command(
     starting_balance: Annotated[float | None, typer.Option("--starting-balance", help="Starting balance.")] = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Reset rollover for a category or group."""
     session = require_session(session_path)
@@ -401,6 +415,7 @@ def create_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Create a budget month."""
     session = require_session(session_path)
@@ -431,6 +446,7 @@ def reset_command(
     ] = False,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Reset budget amounts."""
     session = require_session(session_path)
@@ -456,6 +472,7 @@ def clear_command(
     yes: Annotated[bool, typer.Option("--yes", "-y", help="Skip the confirmation prompt.")] = False,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Clear budget amounts for a month."""
     session = require_session(session_path)
@@ -508,9 +525,9 @@ _CATEGORY_COLUMNS = [
 
 def _print_budget(budget: Budget, *, title: str) -> None:
     print_key_values(title, _budget_details(budget))
-    print_table("Totals", _TOTAL_COLUMNS, (_totals_row(total) for total in budget.totals_by_month))
-    print_table("Groups", _GROUP_COLUMNS, (_group_row(row) for row in budget.groups))
-    print_table("Categories", _CATEGORY_COLUMNS, (_category_row(row) for row in budget.categories))
+    print_table("Totals", _TOTAL_COLUMNS, (_totals_row(total) for total in budget.totals_by_month), source_rows=budget.totals_by_month)
+    print_table("Groups", _GROUP_COLUMNS, (_group_row(row) for row in budget.groups), source_rows=budget.groups)
+    print_table("Categories", _CATEGORY_COLUMNS, (_category_row(row) for row in budget.categories), source_rows=budget.categories)
     if budget.flex is not None:
         print_key_values("Flex Budget", _flex_details(budget.flex))
 

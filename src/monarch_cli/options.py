@@ -30,3 +30,11 @@ RawOption = Annotated[
     bool,
     typer.Option("--raw", help="Include raw Monarch response data in JSON output."),
 ]
+
+OutputFieldsOption = Annotated[
+    str | None,
+    typer.Option(
+        "--fields",
+        help="Comma-separated output fields to show. Supports dotted paths.",
+    ),
+]

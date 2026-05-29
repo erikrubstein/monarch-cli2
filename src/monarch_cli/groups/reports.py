@@ -20,7 +20,7 @@ from monarch_api import (
 )
 
 from monarch_cli.errors import handle_cli_errors
-from monarch_cli.options import JsonOption, RawOption, SessionPathOption
+from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, SessionPathOption
 from monarch_cli.output import format_money, print_key_values, print_success, print_table, print_warning, render_json
 from monarch_cli.session import require_session
 
@@ -95,6 +95,7 @@ def data_command(
     ] = False,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Run report data."""
     session = require_session(session_path)
@@ -122,7 +123,7 @@ def data_command(
         render_json(result, include_raw=raw_output)
         return
     print_key_values("Report Summary", _summary_details(result))
-    print_table("Report Rows", _REPORT_ROW_COLUMNS, (_report_row(row) for row in result.rows))
+    print_table("Report Rows", _REPORT_ROW_COLUMNS, (_report_row(row) for row in result.rows), source_rows=result.rows)
 
 
 @app.command("list-saved")
@@ -131,6 +132,7 @@ def list_saved_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """List saved reports."""
     session = require_session(session_path)
@@ -138,7 +140,7 @@ def list_saved_command(
     if json_output:
         render_json(reports, include_raw=raw_output)
         return
-    print_table("Saved Reports", _SAVED_REPORT_COLUMNS, (_saved_report_row(report) for report in reports))
+    print_table("Saved Reports", _SAVED_REPORT_COLUMNS, (_saved_report_row(report) for report in reports), source_rows=reports)
 
 
 @app.command("get-saved")
@@ -148,6 +150,7 @@ def get_saved_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Show one saved report."""
     session = require_session(session_path)
@@ -182,6 +185,7 @@ def create_saved_command(
     ] = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Create a saved report."""
     session = require_session(session_path)
@@ -216,6 +220,7 @@ def update_saved_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     raw_output: RawOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Update a saved report."""
     session = require_session(session_path)
@@ -236,6 +241,7 @@ def delete_saved_command(
         typer.Option("--yes", "-y", help="Skip the confirmation prompt."),
     ] = False,
     json_output: JsonOption = False,
+    output_fields: OutputFieldsOption = None,
 ) -> None:
     """Delete a saved report."""
     session = require_session(session_path)
