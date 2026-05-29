@@ -28,26 +28,13 @@ This package depends on `monarch-api2`, which is currently installed directly
 from GitHub.
 
 ```bash
-python3 -m venv .venv
-.venv/bin/python -m pip install -U pip
-.venv/bin/python -m pip install git+https://github.com/erikrubstein/monarch-cli2.git
+pipx install git+https://github.com/erikrubstein/monarch-cli2.git
 ```
 
-After installation, the `monarch` command should be available in the virtual
-environment:
+After installation, the `monarch` command should be available on your `PATH`:
 
 ```bash
-.venv/bin/monarch --help
-```
-
-For local development with `monarch-api2` cloned next to this repository:
-
-```bash
-python3 -m venv .venv
-.venv/bin/python -m pip install -U pip
-.venv/bin/python -m pip install httpx typer rich pytest
-.venv/bin/python -m pip install -e ../monarch-api2
-.venv/bin/python -m pip install --no-deps -e .
+monarch --help
 ```
 
 ## Usage
