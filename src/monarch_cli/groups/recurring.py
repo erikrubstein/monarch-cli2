@@ -23,7 +23,7 @@ from monarch_api import (
 )
 
 from monarch_cli.errors import handle_cli_errors
-from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, SessionPathOption, TrueFalseFilter
+from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, AppendFieldsOption, SessionPathOption, TrueFalseFilter
 from monarch_cli.output import format_bool, format_money, print_key_values, print_success, print_table, print_warning, render_json
 from monarch_cli.session import require_session
 
@@ -89,6 +89,7 @@ def list_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """List recurring items."""
     session = require_session(session_path)
@@ -124,6 +125,7 @@ def get_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Show one recurring item."""
     session = require_session(session_path)
@@ -164,6 +166,7 @@ def occurrences_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """List recurring occurrences."""
     session = require_session(session_path)
@@ -207,6 +210,7 @@ def summary_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Summarize recurring items."""
     session = require_session(session_path)
@@ -245,6 +249,7 @@ def create_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Create a recurring item for a merchant."""
     session = require_session(session_path)
@@ -283,6 +288,7 @@ def update_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Update a recurring item."""
     session = require_session(session_path)
@@ -308,6 +314,7 @@ def remove_command(
     yes: Annotated[bool, typer.Option("--yes", "-y", help="Skip the confirmation prompt.")] = False,
     json_output: JsonOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Remove a recurring item."""
     session = require_session(session_path)

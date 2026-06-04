@@ -18,7 +18,7 @@ from monarch_api import (
 )
 
 from monarch_cli.errors import handle_cli_errors
-from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, SessionPathOption
+from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, AppendFieldsOption, SessionPathOption
 from monarch_cli.output import format_money, print_key_values, print_table, render_json
 from monarch_cli.session import require_session
 
@@ -68,6 +68,7 @@ def summary_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Show cashflow summary."""
     session = require_session(session_path)
@@ -109,6 +110,7 @@ def trends_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Show cashflow trends over time."""
     session = require_session(session_path)
@@ -160,6 +162,7 @@ def breakdown_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Show cashflow breakdown rows."""
     session = require_session(session_path)

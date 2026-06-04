@@ -24,7 +24,7 @@ from monarch_api import (
 )
 
 from monarch_cli.errors import handle_cli_errors
-from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, SessionPathOption
+from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, AppendFieldsOption, SessionPathOption
 from monarch_cli.output import (
     format_bool,
     format_money,
@@ -91,6 +91,7 @@ def list_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """List accounts."""
     session = require_session(session_path)
@@ -119,6 +120,7 @@ def get_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Show one account."""
     session = require_session(session_path)
@@ -157,6 +159,7 @@ def net_worth_performance_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Show net worth over time."""
     session = require_session(session_path)
@@ -203,6 +206,7 @@ def net_worth_breakdown_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Show net worth broken down by account type."""
     session = require_session(session_path)
@@ -244,6 +248,7 @@ def historical_balances_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Show account balances on a historical date."""
     session = require_session(session_path)
@@ -278,6 +283,7 @@ def history_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Show balance history for one account."""
     session = require_session(session_path)
@@ -314,6 +320,7 @@ def create_manual_command(
     ] = None,
     json_output: JsonOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Create a manual account."""
     session = require_session(session_path)
@@ -374,6 +381,7 @@ def update_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Update an account."""
     session = require_session(session_path)
@@ -407,6 +415,7 @@ def delete_command(
     ] = False,
     json_output: JsonOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Delete an account."""
     session = require_session(session_path)

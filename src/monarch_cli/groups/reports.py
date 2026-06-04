@@ -20,7 +20,7 @@ from monarch_api import (
 )
 
 from monarch_cli.errors import handle_cli_errors
-from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, SessionPathOption
+from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, AppendFieldsOption, SessionPathOption
 from monarch_cli.output import format_money, print_key_values, print_success, print_table, print_warning, render_json
 from monarch_cli.session import require_session
 
@@ -96,6 +96,7 @@ def data_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Run report data."""
     session = require_session(session_path)
@@ -133,6 +134,7 @@ def list_saved_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """List saved reports."""
     session = require_session(session_path)
@@ -151,6 +153,7 @@ def get_saved_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Show one saved report."""
     session = require_session(session_path)
@@ -186,6 +189,7 @@ def create_saved_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Create a saved report."""
     session = require_session(session_path)
@@ -221,6 +225,7 @@ def update_saved_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Update a saved report."""
     session = require_session(session_path)
@@ -242,6 +247,7 @@ def delete_saved_command(
     ] = False,
     json_output: JsonOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Delete a saved report."""
     session = require_session(session_path)

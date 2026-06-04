@@ -34,7 +34,7 @@ from monarch_api import (
 
 from monarch_cli.errors import handle_cli_errors
 from monarch_cli.input import load_json_argument
-from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, SessionPathOption, TrueFalseFilter
+from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, AppendFieldsOption, SessionPathOption, TrueFalseFilter
 from monarch_cli.output import (
     format_bool,
     format_bytes,
@@ -191,6 +191,7 @@ def list_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """List transactions."""
     session = require_session(session_path)
@@ -254,6 +255,7 @@ def get_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Show one transaction."""
     session = require_session(session_path)
@@ -293,6 +295,7 @@ def create_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Create a manual transaction."""
     session = require_session(session_path)
@@ -350,6 +353,7 @@ def update_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Update a transaction."""
     session = require_session(session_path)
@@ -387,6 +391,7 @@ def delete_command(
     ] = False,
     json_output: JsonOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Delete a transaction."""
     session = require_session(session_path)
@@ -411,6 +416,7 @@ def get_splits_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Show split details for a transaction."""
     session = require_session(session_path)
@@ -440,6 +446,7 @@ def update_splits_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Replace transaction splits."""
     session = require_session(session_path)
@@ -467,6 +474,7 @@ def unsplit_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Remove transaction splits."""
     session = require_session(session_path)
@@ -492,6 +500,7 @@ def list_attachments_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """List attachments for a transaction."""
     session = require_session(session_path)
@@ -519,6 +528,7 @@ def get_attachment_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Show one transaction attachment."""
     session = require_session(session_path)
@@ -549,6 +559,7 @@ def upload_attachment_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Upload a transaction attachment."""
     session = require_session(session_path)
@@ -576,6 +587,7 @@ def download_attachment_command(
     session_path: SessionPathOption = None,
     json_output: JsonOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Download a transaction attachment."""
     session = require_session(session_path)
@@ -616,6 +628,7 @@ def delete_attachment_command(
     ] = False,
     json_output: JsonOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Delete a transaction attachment."""
     session = require_session(session_path)

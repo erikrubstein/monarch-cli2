@@ -30,7 +30,7 @@ from monarch_api import (
 )
 
 from monarch_cli.errors import handle_cli_errors
-from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, SessionPathOption
+from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, AppendFieldsOption, SessionPathOption
 from monarch_cli.output import format_bool, format_money, print_key_values, print_success, print_table, print_warning, render_json
 from monarch_cli.session import require_session
 
@@ -61,6 +61,7 @@ def list_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """List goals."""
     session = require_session(session_path)
@@ -79,6 +80,7 @@ def get_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Show one goal."""
     session = require_session(session_path)
@@ -122,6 +124,7 @@ def create_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Create a goal."""
     session = require_session(session_path)
@@ -173,6 +176,7 @@ def update_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Update a goal."""
     session = require_session(session_path)
@@ -204,6 +208,7 @@ def delete_command(
     yes: Annotated[bool, typer.Option("--yes", "-y", help="Skip the confirmation prompt.")] = False,
     json_output: JsonOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Delete a goal."""
     session = require_session(session_path)
@@ -228,6 +233,7 @@ def archive_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Archive a goal."""
     session = require_session(session_path)
@@ -246,6 +252,7 @@ def restore_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Restore an archived goal."""
     session = require_session(session_path)
@@ -264,6 +271,7 @@ def priorities_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Update goal priorities."""
     session = require_session(session_path)
@@ -287,6 +295,7 @@ def link_account_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Link an account balance to a goal."""
     session = require_session(session_path)
@@ -312,6 +321,7 @@ def unlink_account_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Unlink an account from a goal."""
     session = require_session(session_path)
@@ -330,6 +340,7 @@ def events_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """List goal events."""
     session = require_session(session_path)
@@ -356,6 +367,7 @@ def contribute_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Add a goal contribution."""
     session = require_session(session_path)
@@ -390,6 +402,7 @@ def withdraw_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Add a goal withdrawal."""
     session = require_session(session_path)
@@ -422,6 +435,7 @@ def update_event_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Update a goal event."""
     session = require_session(session_path)
@@ -446,6 +460,7 @@ def delete_event_command(
     yes: Annotated[bool, typer.Option("--yes", "-y", help="Skip the confirmation prompt.")] = False,
     json_output: JsonOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Delete a goal event."""
     session = require_session(session_path)
@@ -472,6 +487,7 @@ def budget_amounts_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """List goal budget amounts."""
     session = require_session(session_path)
@@ -496,6 +512,7 @@ def set_budget_amount_command(
     account_id: Annotated[str | None, typer.Option("--account-id", help="Account id.")] = None,
     json_output: JsonOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Set a goal budget amount."""
     session = require_session(session_path)

@@ -26,7 +26,7 @@ from monarch_api import (
 )
 
 from monarch_cli.errors import handle_cli_errors
-from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, SessionPathOption
+from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, AppendFieldsOption, SessionPathOption
 from monarch_cli.output import format_bool, print_key_values, print_success, print_table, print_warning, render_json
 from monarch_cli.session import require_session
 
@@ -58,6 +58,7 @@ def list_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """List categories."""
     session = require_session(session_path)
@@ -79,6 +80,7 @@ def list_groups_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """List category groups."""
     session = require_session(session_path)
@@ -100,6 +102,7 @@ def catalog_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Show the category catalog."""
     session = require_session(session_path)
@@ -119,6 +122,7 @@ def get_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Show one category."""
     session = require_session(session_path)
@@ -140,6 +144,7 @@ def get_group_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Show one category group."""
     session = require_session(session_path)
@@ -163,6 +168,7 @@ def create_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Create a category."""
     session = require_session(session_path)
@@ -184,6 +190,7 @@ def update_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Update a category."""
     session = require_session(session_path)
@@ -206,6 +213,7 @@ def remove_command(
     yes: Annotated[bool, typer.Option("--yes", "-y", help="Skip the confirmation prompt.")] = False,
     json_output: JsonOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Remove a category."""
     session = require_session(session_path)
@@ -230,6 +238,7 @@ def reactivate_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Reactivate a category."""
     session = require_session(session_path)
@@ -250,6 +259,7 @@ def reorder_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Reorder a category."""
     session = require_session(session_path)
@@ -269,6 +279,7 @@ def create_group_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Create a category group."""
     session = require_session(session_path)
@@ -292,6 +303,7 @@ def update_group_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Update a category group."""
     session = require_session(session_path)
@@ -314,6 +326,7 @@ def delete_group_command(
     yes: Annotated[bool, typer.Option("--yes", "-y", help="Skip the confirmation prompt.")] = False,
     json_output: JsonOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Delete a category group."""
     session = require_session(session_path)
@@ -339,6 +352,7 @@ def reorder_group_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Reorder a category group."""
     session = require_session(session_path)

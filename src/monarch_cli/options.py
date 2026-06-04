@@ -38,3 +38,11 @@ OutputFieldsOption = Annotated[
         help="Comma-separated output fields to show. Supports dotted paths.",
     ),
 ]
+
+AppendFieldsOption = Annotated[
+    str | None,
+    typer.Option(
+        "--append-fields",
+        help="Comma-separated output fields to append. Supports dotted paths.",
+    ),
+]

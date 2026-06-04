@@ -40,7 +40,7 @@ from monarch_api import (
 )
 
 from monarch_cli.errors import handle_cli_errors
-from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, SessionPathOption
+from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, AppendFieldsOption, SessionPathOption
 from monarch_cli.output import format_bool, format_money, print_key_values, print_success, print_table, print_warning, render_json
 from monarch_cli.session import require_session
 
@@ -63,6 +63,7 @@ def get_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Show one budget month."""
     session = require_session(session_path)
@@ -82,6 +83,7 @@ def months_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """List budget months."""
     session = require_session(session_path)
@@ -99,6 +101,7 @@ def settings_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Show budget settings."""
     session = require_session(session_path)
@@ -118,6 +121,7 @@ def category_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Show one budget category."""
     session = require_session(session_path)
@@ -138,6 +142,7 @@ def flex_rollover_settings_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Show flex rollover settings."""
     session = require_session(session_path)
@@ -163,6 +168,7 @@ def set_amount_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Set a category budget amount."""
     session = require_session(session_path)
@@ -195,6 +201,7 @@ def set_group_amount_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Set a category group budget amount."""
     session = require_session(session_path)
@@ -226,6 +233,7 @@ def set_flex_amount_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Set a flex budget amount."""
     session = require_session(session_path)
@@ -251,6 +259,7 @@ def set_category_variability_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Set category budget variability."""
     session = require_session(session_path)
@@ -270,6 +279,7 @@ def set_group_variability_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Set category group budget variability."""
     session = require_session(session_path)
@@ -304,6 +314,7 @@ def set_category_rollover_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Set category rollover settings."""
     session = require_session(session_path)
@@ -339,6 +350,7 @@ def set_group_rollover_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Set category group rollover settings."""
     session = require_session(session_path)
@@ -366,6 +378,7 @@ def set_flex_rollover_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Set flex rollover settings."""
     session = require_session(session_path)
@@ -392,6 +405,7 @@ def reset_rollover_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Reset rollover for a category or group."""
     session = require_session(session_path)
@@ -416,6 +430,7 @@ def create_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Create a budget month."""
     session = require_session(session_path)
@@ -447,6 +462,7 @@ def reset_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Reset budget amounts."""
     session = require_session(session_path)
@@ -473,6 +489,7 @@ def clear_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Clear budget amounts for a month."""
     session = require_session(session_path)

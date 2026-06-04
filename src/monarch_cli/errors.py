@@ -6,7 +6,7 @@ from typing import Any, Callable, TypeVar, cast
 import typer
 from monarch_api import MonarchAuthError, MonarchError, MfaRequiredError
 
-from monarch_cli.output import print_error, print_warning, set_output_fields
+from monarch_cli.output import clear_output_fields, configure_output_fields, print_error, print_warning
 
 F = TypeVar("F", bound=Callable[..., Any])
 
@@ -15,7 +15,10 @@ def handle_cli_errors(function: F) -> F:
     @wraps(function)
     def wrapper(*args: Any, **kwargs: Any) -> Any:
         try:
-            set_output_fields(kwargs.get("output_fields"))
+            configure_output_fields(
+                kwargs.get("output_fields"),
+                kwargs.get("append_output_fields"),
+            )
             return function(*args, **kwargs)
         except MfaRequiredError as error:
             print_warning("MFA is required. Run login again with --mfa-code.")
@@ -33,6 +36,6 @@ def handle_cli_errors(function: F) -> F:
             print_error(str(error))
             raise typer.Exit(1) from error
         finally:
-            set_output_fields(None)
+            clear_output_fields()
 
     return cast(F, wrapper)

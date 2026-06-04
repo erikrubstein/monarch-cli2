@@ -121,11 +121,74 @@ def test_transactions_list_can_override_output_fields(monkeypatch, tmp_path) -> 
     assert "memo" in result.output
 
 
+def test_transactions_list_can_append_output_fields(monkeypatch, tmp_path) -> None:
+    session_path = _write_session(tmp_path)
+
+    def fake_list_transactions(session, *, filters=None, limit=100, offset=0, sort=None):
+        return TransactionPage(
+            transactions=[
+                Transaction(
+                    id="transaction-123",
+                    date="2026-05-28",
+                    amount=-12.34,
+                    merchant_name="Coffee",
+                    notes="memo",
+                )
+            ],
+            total_count=1,
+            limit=limit,
+            offset=offset,
+        )
+
+    monkeypatch.setattr(
+        "monarch_cli.groups.transactions.list_transactions",
+        fake_list_transactions,
+    )
+
+    result = runner.invoke(
+        app,
+        [
+            "transactions",
+            "list",
+            "--session-path",
+            str(session_path),
+            "--append-fields",
+            "notes",
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert "Coffee" in result.output
+    assert "memo" in result.output
+
+
+def test_transactions_list_rejects_fields_and_append_fields(tmp_path) -> None:
+    session_path = _write_session(tmp_path)
+
+    result = runner.invoke(
+        app,
+        [
+            "transactions",
+            "list",
+            "--session-path",
+            str(session_path),
+            "--fields",
+            "id",
+            "--append-fields",
+            "notes",
+        ],
+    )
+
+    assert result.exit_code == 1
+    assert "Use either --fields or --append-fields, not both." in result.output
+
+
 def test_transactions_list_help_shows_output_fields_option() -> None:
     result = runner.invoke(app, ["transactions", "list", "--help"])
 
     assert result.exit_code == 0
     assert "--fields" in result.output
+    assert "--append-fields" in result.output
     assert "--columns" not in result.output
 
 

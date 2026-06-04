@@ -25,7 +25,7 @@ from monarch_api import (
 
 from monarch_cli.errors import handle_cli_errors
 from monarch_cli.input import load_json_argument
-from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, SessionPathOption
+from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, AppendFieldsOption, SessionPathOption
 from monarch_cli.output import (
     format_bool,
     format_bytes,
@@ -62,6 +62,7 @@ def list_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """List receipts."""
     session = require_session(session_path)
@@ -90,6 +91,7 @@ def get_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Show one receipt."""
     session = require_session(session_path)
@@ -126,6 +128,7 @@ def upload_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Upload a receipt."""
     session = require_session(session_path)
@@ -152,6 +155,7 @@ def delete_command(
     ] = False,
     json_output: JsonOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Delete a receipt."""
     session = require_session(session_path)
@@ -177,6 +181,7 @@ def match_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Match a receipt to a transaction."""
     session = require_session(session_path)
@@ -195,6 +200,7 @@ def unmatch_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Remove a receipt transaction match."""
     session = require_session(session_path)
@@ -244,6 +250,7 @@ def update_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Update a receipt."""
     session = require_session(session_path)
@@ -277,6 +284,7 @@ def settings_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Show receipt settings."""
     session = require_session(session_path)
@@ -305,6 +313,7 @@ def update_settings_command(
     json_output: JsonOption = False,
     raw_output: RawOption = False,
     output_fields: OutputFieldsOption = None,
+    append_output_fields: AppendFieldsOption = None,
 ) -> None:
     """Update receipt settings."""
     session = require_session(session_path)

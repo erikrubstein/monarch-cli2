@@ -14,6 +14,10 @@ from monarch_cli.theme import console
 Column = tuple[str, str]
 Number = int | float
 _output_fields: ContextVar[list[str] | None] = ContextVar("output_fields", default=None)
+_append_output_fields: ContextVar[list[str] | None] = ContextVar(
+    "append_output_fields",
+    default=None,
+)
 DEFAULT_PROJECTED_FIELD_STYLE = "muted"
 PROJECTED_FIELD_STYLES = {
     "id": "meta",
@@ -59,25 +63,48 @@ PROJECTED_FIELD_STYLES = {
 }
 
 
-def set_output_fields(value: str | None) -> None:
+def configure_output_fields(fields: str | None, append_fields: str | None) -> None:
+    parsed_fields = parse_output_fields(fields, "--fields")
+    parsed_append_fields = parse_output_fields(append_fields, "--append-fields")
+    if parsed_fields is not None and parsed_append_fields is not None:
+        raise ValueError("Use either --fields or --append-fields, not both.")
+    _output_fields.set(parsed_fields)
+    _append_output_fields.set(parsed_append_fields)
+
+
+def clear_output_fields() -> None:
+    _output_fields.set(None)
+    _append_output_fields.set(None)
+
+
+def parse_output_fields(value: str | None, option_name: str) -> list[str] | None:
     if value is None:
-        _output_fields.set(None)
-        return
+        return None
     fields = [field.strip() for field in value.split(",") if field.strip()]
     if not fields:
-        raise ValueError("--fields must include at least one field.")
-    _output_fields.set(fields)
+        raise ValueError(f"{option_name} must include at least one field.")
+    return fields
 
 
 def get_output_fields() -> list[str] | None:
     return _output_fields.get()
 
 
-def render_json(value: Any, *, include_raw: bool = False) -> None:
+def get_append_output_fields() -> list[str] | None:
+    return _append_output_fields.get()
+
+
+def render_json(
+    value: Any,
+    *,
+    include_raw: bool = False,
+    apply_output_fields: bool = True,
+) -> None:
     plain = to_plain(value, include_raw=include_raw)
-    fields = get_output_fields()
-    if fields is not None:
-        plain = project_fields(plain, fields)
+    if apply_output_fields:
+        fields = get_output_fields()
+        if fields is not None:
+            plain = project_fields(plain, fields)
     console.print_json(json.dumps(plain, indent=2))
 
 
@@ -111,11 +138,18 @@ def print_key_values(
     json_output: bool = False,
 ) -> None:
     fields = get_output_fields()
+    append_fields = get_append_output_fields()
     if fields is not None:
         rows = project_row(source if source is not None else rows, fields)
+    elif append_fields is not None:
+        rows = append_projected_row(
+            rows,
+            source if source is not None else rows,
+            append_fields,
+        )
 
     if json_output:
-        render_json(rows)
+        render_json(rows, apply_output_fields=False)
         return
 
     table = Table(
@@ -143,13 +177,21 @@ def print_table(
 ) -> None:
     row_list = list(rows)
     fields = get_output_fields()
+    append_fields = get_append_output_fields()
     if fields is not None:
         source_list = list(source_rows) if source_rows is not None else row_list
         row_list = [project_row(row, fields) for row in source_list]
         columns = projected_columns(fields, columns)
+    elif append_fields is not None:
+        source_list = list(source_rows) if source_rows is not None else row_list
+        row_list = [
+            append_projected_row(row, source, append_fields)
+            for row, source in zip(row_list, source_list, strict=True)
+        ]
+        columns = append_projected_columns(append_fields, columns)
 
     if json_output:
-        render_json(row_list, include_raw=raw_output)
+        render_json(row_list, include_raw=raw_output, apply_output_fields=False)
         return
 
     table = Table(title=title, title_style="accent", border_style="grey35")
@@ -209,6 +251,15 @@ def projected_columns(fields: Sequence[str], base_columns: Sequence[Column]) -> 
     return [(field, projected_field_style(field, base_styles)) for field in fields]
 
 
+def append_projected_columns(
+    fields: Sequence[str],
+    base_columns: Sequence[Column],
+) -> list[Column]:
+    base_headers = {header for header, _style in base_columns}
+    appended_fields = [field for field in fields if field not in base_headers]
+    return [*base_columns, *projected_columns(appended_fields, base_columns)]
+
+
 def projected_field_style(field: str, base_styles: dict[str, str]) -> str:
     if field in base_styles:
         return base_styles[field]
@@ -238,6 +289,15 @@ def project_fields(value: Any, fields: Sequence[str]) -> Any:
 def project_row(value: Any, fields: Sequence[str]) -> dict[str, Any]:
     plain = to_plain(value)
     return {field: value_at_path(plain, field) for field in fields}
+
+
+def append_projected_row(
+    row: dict[str, object],
+    source: Any,
+    fields: Sequence[str],
+) -> dict[str, object]:
+    appended = project_row(source, fields)
+    return {**row, **{key: value for key, value in appended.items() if key not in row}}
 
 
 def value_at_path(value: Any, path: str) -> Any:

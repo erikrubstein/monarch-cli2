@@ -113,10 +113,12 @@ monarch transactions get TRANSACTION_ID --json --raw
 ```
 
 Use `--fields` on a command to show a comma-separated set of output fields.
-Dotted paths can select nested values:
+Use `--append-fields` to keep the default output and add extra fields. Dotted
+paths can select nested values:
 
 ```bash
 monarch transactions list --fields id,date,amount,notes
+monarch transactions list --append-fields notes
 monarch transactions list --json --fields id,merchant.name,category.name
 ```
 
