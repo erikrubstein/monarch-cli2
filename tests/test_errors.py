@@ -20,6 +20,7 @@ def test_mfa_error_uses_cli_language() -> None:
     result = runner.invoke(app)
 
     assert result.exit_code == 2
+    assert "Error" in result.output
     assert "Run login again with --mfa-code" in result.output
     assert "create_session" not in result.output
     assert "mfa_code" not in result.output

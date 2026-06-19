@@ -29,7 +29,7 @@ from monarch_api import (
     withdraw_from_goal,
 )
 
-from monarch_cli.errors import handle_cli_errors
+from monarch_cli.errors import handle_cli_errors, raise_cli_error
 from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, AppendFieldsOption, SessionPathOption
 from monarch_cli.output import format_bool, format_money, print_key_values, print_success, print_table, print_warning, render_json
 from monarch_cli.session import require_session
@@ -86,8 +86,7 @@ def get_command(
     session = require_session(session_path)
     goal = get_goal(session, goal_id)
     if goal is None:
-        print_warning(f"No goal found for id {goal_id}.")
-        raise typer.Exit(1)
+        raise_cli_error(f"No goal found for id {goal_id}.")
     if json_output:
         render_json(goal, include_raw=raw_output)
         return

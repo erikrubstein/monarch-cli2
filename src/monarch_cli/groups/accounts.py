@@ -23,7 +23,7 @@ from monarch_api import (
     update_account,
 )
 
-from monarch_cli.errors import handle_cli_errors
+from monarch_cli.errors import handle_cli_errors, raise_cli_error
 from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, AppendFieldsOption, SessionPathOption
 from monarch_cli.output import (
     format_bool,
@@ -126,8 +126,7 @@ def get_command(
     session = require_session(session_path)
     account = get_account(session, account_id)
     if account is None:
-        print_warning(f"No account found for id {account_id}.")
-        raise typer.Exit(1)
+        raise_cli_error(f"No account found for id {account_id}.")
     if json_output:
         render_json(account, include_raw=raw_output)
         return

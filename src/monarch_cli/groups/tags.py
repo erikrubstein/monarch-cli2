@@ -13,7 +13,7 @@ from monarch_api import (
     update_tag,
 )
 
-from monarch_cli.errors import handle_cli_errors
+from monarch_cli.errors import handle_cli_errors, raise_cli_error
 from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, AppendFieldsOption, SessionPathOption
 from monarch_cli.output import print_key_values, print_success, print_table, print_warning, render_json
 from monarch_cli.session import require_session
@@ -67,8 +67,7 @@ def get_command(
     session = require_session(session_path)
     tag = get_tag(session, tag_id)
     if tag is None:
-        print_warning(f"No tag found for id {tag_id}.")
-        raise typer.Exit(1)
+        raise_cli_error(f"No tag found for id {tag_id}.")
     if json_output:
         render_json(tag, include_raw=raw_output)
         return

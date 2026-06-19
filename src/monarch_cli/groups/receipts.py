@@ -23,7 +23,7 @@ from monarch_api import (
     upload_receipt,
 )
 
-from monarch_cli.errors import handle_cli_errors
+from monarch_cli.errors import handle_cli_errors, raise_cli_error
 from monarch_cli.input import load_json_argument
 from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, AppendFieldsOption, SessionPathOption
 from monarch_cli.output import (
@@ -97,8 +97,7 @@ def get_command(
     session = require_session(session_path)
     receipt = get_receipt(session, receipt_id)
     if receipt is None:
-        print_warning(f"No receipt found for id {receipt_id}.")
-        raise typer.Exit(1)
+        raise_cli_error(f"No receipt found for id {receipt_id}.")
     if json_output:
         render_json(receipt, include_raw=raw_output)
         return

@@ -12,7 +12,7 @@ from monarch_api import (
     update_merchant,
 )
 
-from monarch_cli.errors import handle_cli_errors
+from monarch_cli.errors import handle_cli_errors, raise_cli_error
 from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, AppendFieldsOption, SessionPathOption
 from monarch_cli.output import format_bool, print_key_values, print_success, print_table, print_warning, render_json
 from monarch_cli.session import require_session
@@ -68,8 +68,7 @@ def get_command(
     session = require_session(session_path)
     merchant = get_merchant(session, merchant_id)
     if merchant is None:
-        print_warning(f"No merchant found for id {merchant_id}.")
-        raise typer.Exit(1)
+        raise_cli_error(f"No merchant found for id {merchant_id}.")
     if json_output:
         render_json(merchant, include_raw=raw_output)
         return

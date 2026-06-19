@@ -1,14 +1,27 @@
 from __future__ import annotations
 
 from functools import wraps
-from typing import Any, Callable, TypeVar, cast
+from typing import Any, Callable, NoReturn, TypeVar, cast
 
-import typer
 from monarch_api import MonarchAuthError, MonarchError, MfaRequiredError
+from typer import _click
 
-from monarch_cli.output import clear_output_fields, configure_output_fields, print_error, print_warning
+from monarch_cli.output import clear_output_fields, configure_output_fields
 
 F = TypeVar("F", bound=Callable[..., Any])
+
+
+def raise_cli_error(
+    message: str,
+    *,
+    exit_code: int = 1,
+    cause: BaseException | None = None,
+) -> NoReturn:
+    error = _click.ClickException(message)
+    error.exit_code = exit_code
+    if cause is not None:
+        raise error from cause
+    raise error
 
 
 def handle_cli_errors(function: F) -> F:
@@ -21,20 +34,19 @@ def handle_cli_errors(function: F) -> F:
             )
             return function(*args, **kwargs)
         except MfaRequiredError as error:
-            print_warning("MFA is required. Run login again with --mfa-code.")
-            raise typer.Exit(2) from error
+            raise_cli_error(
+                "MFA is required. Run login again with --mfa-code.",
+                exit_code=2,
+                cause=error,
+            )
         except MonarchAuthError as error:
-            print_error(f"Authentication failed: {error}")
-            raise typer.Exit(1) from error
+            raise_cli_error(f"Authentication failed: {error}", cause=error)
         except MonarchError as error:
-            print_error(str(error))
-            raise typer.Exit(1) from error
+            raise_cli_error(str(error), cause=error)
         except FileNotFoundError as error:
-            print_error(str(error))
-            raise typer.Exit(1) from error
+            raise_cli_error(str(error), cause=error)
         except ValueError as error:
-            print_error(str(error))
-            raise typer.Exit(1) from error
+            raise_cli_error(str(error), cause=error)
         finally:
             clear_output_fields()
 

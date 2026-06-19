@@ -23,7 +23,7 @@ from monarch_api import (
     update_manual_holding,
 )
 
-from monarch_cli.errors import handle_cli_errors
+from monarch_cli.errors import handle_cli_errors, raise_cli_error
 from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, AppendFieldsOption, SessionPathOption
 from monarch_cli.output import format_bool, format_money, print_key_values, print_success, print_table, print_warning, render_json
 from monarch_cli.session import require_session
@@ -136,8 +136,7 @@ def get_holding_command(
     session = require_session(session_path)
     holding = get_holding(session, holding_id)
     if holding is None:
-        print_warning(f"No holding found for id {holding_id}.")
-        raise typer.Exit(1)
+        raise_cli_error(f"No holding found for id {holding_id}.")
     if json_output:
         render_json(holding, include_raw=raw_output)
         return
@@ -189,8 +188,7 @@ def get_security_command(
     session = require_session(session_path)
     security = get_security(session, security_id)
     if security is None:
-        print_warning(f"No security found for id {security_id}.")
-        raise typer.Exit(1)
+        raise_cli_error(f"No security found for id {security_id}.")
     if json_output:
         render_json(security, include_raw=raw_output)
         return
@@ -218,8 +216,7 @@ def holding_performance_command(
         end_date=end_date,
     )
     if performance is None:
-        print_warning(f"No performance found for holding id {holding_id}.")
-        raise typer.Exit(1)
+        raise_cli_error(f"No performance found for holding id {holding_id}.")
     if json_output:
         render_json(performance, include_raw=raw_output)
         return

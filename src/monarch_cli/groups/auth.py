@@ -7,7 +7,7 @@ import typer
 from monarch_api import MfaRequiredError, create_session, load_session
 
 from monarch_cli.config import delete_session, has_session, resolve_session_path, write_session
-from monarch_cli.errors import handle_cli_errors
+from monarch_cli.errors import handle_cli_errors, raise_cli_error
 from monarch_cli.options import JsonOption, SessionPathOption, OutputFieldsOption, AppendFieldsOption
 from monarch_cli.output import print_key_values, print_success, print_warning
 
@@ -99,8 +99,7 @@ def status(
     """Show the currently saved session."""
     path = resolve_session_path(session_path)
     if not path.exists():
-        print_warning(f"No saved session found at {path}.")
-        raise typer.Exit(1)
+        raise_cli_error(f"No saved session found at {path}.")
 
     session = load_session(path)
     print_key_values(

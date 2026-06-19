@@ -22,7 +22,7 @@ from monarch_api import (
     update_recurring_stream,
 )
 
-from monarch_cli.errors import handle_cli_errors
+from monarch_cli.errors import handle_cli_errors, raise_cli_error
 from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, AppendFieldsOption, SessionPathOption, TrueFalseFilter
 from monarch_cli.output import format_bool, format_money, print_key_values, print_success, print_table, print_warning, render_json
 from monarch_cli.session import require_session
@@ -135,8 +135,7 @@ def get_command(
         include_liabilities=not exclude_liabilities,
     )
     if stream is None:
-        print_warning(f"No recurring item found for id {recurring_id}.")
-        raise typer.Exit(1)
+        raise_cli_error(f"No recurring item found for id {recurring_id}.")
     if json_output:
         render_json(stream, include_raw=raw_output)
         return

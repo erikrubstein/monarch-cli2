@@ -32,7 +32,7 @@ from monarch_api import (
     upload_transaction_attachment,
 )
 
-from monarch_cli.errors import handle_cli_errors
+from monarch_cli.errors import handle_cli_errors, raise_cli_error
 from monarch_cli.input import load_json_argument
 from monarch_cli.options import JsonOption, RawOption, OutputFieldsOption, AppendFieldsOption, SessionPathOption, TrueFalseFilter
 from monarch_cli.output import (
@@ -265,8 +265,7 @@ def get_command(
         redirect_posted=not no_redirect_posted,
     )
     if transaction is None:
-        print_warning(f"No transaction found for id {transaction_id}.")
-        raise typer.Exit(1)
+        raise_cli_error(f"No transaction found for id {transaction_id}.")
     if json_output:
         render_json(transaction, include_raw=raw_output)
         return
@@ -422,8 +421,7 @@ def get_splits_command(
     session = require_session(session_path)
     details = get_transaction_splits(session, transaction_id)
     if details is None:
-        print_warning(f"No transaction found for id {transaction_id}.")
-        raise typer.Exit(1)
+        raise_cli_error(f"No transaction found for id {transaction_id}.")
     if json_output:
         render_json(details, include_raw=raw_output)
         return
@@ -534,8 +532,7 @@ def get_attachment_command(
     session = require_session(session_path)
     attachment = get_transaction_attachment(session, attachment_id)
     if attachment is None:
-        print_warning(f"No attachment found for id {attachment_id}.")
-        raise typer.Exit(1)
+        raise_cli_error(f"No attachment found for id {attachment_id}.")
     if json_output:
         render_json(attachment, include_raw=raw_output)
         return
