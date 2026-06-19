@@ -20,7 +20,15 @@ app = typer.Typer(
 @app.command("login")
 @handle_cli_errors
 def login(
-    email: Annotated[str, typer.Argument(help="Monarch account email address.")],
+    email: Annotated[
+        str,
+        typer.Option(
+            "--email",
+            "-e",
+            prompt=True,
+            help="Monarch account email address.",
+        ),
+    ],
     password: Annotated[
         str,
         typer.Option(

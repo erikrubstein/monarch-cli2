@@ -42,7 +42,7 @@ monarch --help
 Start by signing in:
 
 ```bash
-monarch auth login you@example.com
+monarch auth login
 monarch auth status
 ```
 

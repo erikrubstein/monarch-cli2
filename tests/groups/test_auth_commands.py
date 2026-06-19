@@ -78,6 +78,7 @@ def test_auth_login_prompts_for_mfa_when_required(monkeypatch, tmp_path) -> None
         [
             "auth",
             "login",
+            "--email",
             "person@example.com",
             "--password",
             "secret",
@@ -92,3 +93,49 @@ def test_auth_login_prompts_for_mfa_when_required(monkeypatch, tmp_path) -> None
     assert "MFA code" in result.output
     assert "person@example.com" in result.output
     assert "create_session" not in result.output
+
+
+def test_auth_login_prompts_for_email_and_password(monkeypatch, tmp_path) -> None:
+    captured: dict[str, object] = {}
+
+    def fake_create_session(
+        email: str,
+        password: str,
+        *,
+        mfa_code: str | None = None,
+        trusted_device: bool = True,
+        session_path=None,
+    ) -> AuthSession:
+        captured["email"] = email
+        captured["password"] = password
+        captured["mfa_code"] = mfa_code
+        captured["trusted_device"] = trusted_device
+        captured["session_path"] = session_path
+        return AuthSession(
+            token="token-123",
+            token_expiration="2030-01-01T00:00:00Z",
+            user_id="user-123",
+            email=email,
+        )
+
+    monkeypatch.setattr("monarch_cli.groups.auth.create_session", fake_create_session)
+
+    session_path = tmp_path / "session.json"
+    result = runner.invoke(
+        app,
+        [
+            "auth",
+            "login",
+            "--session-path",
+            str(session_path),
+        ],
+        input="person@example.com\nsecret\n",
+    )
+
+    assert result.exit_code == 0
+    assert captured["email"] == "person@example.com"
+    assert captured["password"] == "secret"
+    assert captured["session_path"] == session_path
+    assert "Email" in result.output
+    assert "Password" in result.output
+    assert "person@example.com" in result.output
