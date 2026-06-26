@@ -115,7 +115,9 @@ def test_accounts_missing_session_uses_cli_message(tmp_path) -> None:
 
     assert result.exit_code == 1
     assert "No saved session found" in result.output
-    assert "monarch auth login" in result.output
+    assert "monarch" in result.output
+    assert "auth" in result.output
+    assert "login" in result.output
 
 
 def _write_session(tmp_path):

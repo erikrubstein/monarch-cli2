@@ -329,6 +329,123 @@ def test_transactions_get_renders_friendly_details(monkeypatch, tmp_path) -> Non
     assert "Coffee" in result.output
 
 
+def test_transactions_get_fields_do_not_shape_friendly_details(monkeypatch, tmp_path) -> None:
+    session_path = _write_session(tmp_path)
+
+    def fake_get_transaction(session, transaction_id, *, redirect_posted=True):
+        return Transaction(
+            id=transaction_id,
+            date="2026-05-28",
+            amount=-12.34,
+            account=AccountReference(id="account-1", display_name="Checking"),
+            category=CategoryReference(id="category-1", name="Coffee"),
+            merchant_name="Cafe",
+        )
+
+    monkeypatch.setattr(
+        "monarch_cli.groups.transactions.get_transaction",
+        fake_get_transaction,
+    )
+
+    result = runner.invoke(
+        app,
+        [
+            "transactions",
+            "get",
+            "transaction-123",
+            "--session-path",
+            str(session_path),
+            "--fields",
+            "id",
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert "transaction-123" in result.output
+    assert "Cafe" in result.output
+    assert "Checking" in result.output
+
+
+def test_transactions_get_append_fields_do_not_shape_friendly_details(
+    monkeypatch,
+    tmp_path,
+) -> None:
+    session_path = _write_session(tmp_path)
+
+    def fake_get_transaction(session, transaction_id, *, redirect_posted=True):
+        return Transaction(
+            id=transaction_id,
+            date="2026-05-28",
+            amount=-12.34,
+            account=AccountReference(id="account-1", display_name="Checking"),
+            category=CategoryReference(id="category-1", name="Coffee"),
+            merchant_name="Cafe",
+        )
+
+    monkeypatch.setattr(
+        "monarch_cli.groups.transactions.get_transaction",
+        fake_get_transaction,
+    )
+
+    result = runner.invoke(
+        app,
+        [
+            "transactions",
+            "get",
+            "transaction-123",
+            "--session-path",
+            str(session_path),
+            "--append-fields",
+            "account.id",
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert "Cafe" in result.output
+    assert "Checking" in result.output
+    assert "account.id" not in result.output
+    assert "account-1" not in result.output
+
+
+def test_transactions_get_fields_shape_json(monkeypatch, tmp_path) -> None:
+    session_path = _write_session(tmp_path)
+
+    def fake_get_transaction(session, transaction_id, *, redirect_posted=True):
+        return Transaction(
+            id=transaction_id,
+            date="2026-05-28",
+            amount=-12.34,
+            account=AccountReference(id="account-1", display_name="Checking"),
+            category=CategoryReference(id="category-1", name="Coffee"),
+            merchant_name="Cafe",
+        )
+
+    monkeypatch.setattr(
+        "monarch_cli.groups.transactions.get_transaction",
+        fake_get_transaction,
+    )
+
+    result = runner.invoke(
+        app,
+        [
+            "transactions",
+            "get",
+            "transaction-123",
+            "--session-path",
+            str(session_path),
+            "--json",
+            "--fields",
+            "id,account.display_name,category.name",
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert '"id": "transaction-123"' in result.output
+    assert '"account.display_name": "Checking"' in result.output
+    assert '"category.name": "Coffee"' in result.output
+    assert '"merchant_name"' not in result.output
+
+
 def _write_session(tmp_path):
     session_path = tmp_path / "session.json"
     session_path.write_text(

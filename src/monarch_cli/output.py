@@ -138,17 +138,9 @@ def print_key_values(
     json_output: bool = False,
 ) -> None:
     fields = get_output_fields()
-    append_fields = get_append_output_fields()
-    if fields is not None:
-        rows = project_row(source if source is not None else rows, fields)
-    elif append_fields is not None:
-        rows = append_projected_row(
-            rows,
-            source if source is not None else rows,
-            append_fields,
-        )
-
     if json_output:
+        if fields is not None:
+            rows = project_row(source if source is not None else rows, fields)
         render_json(rows, apply_output_fields=False)
         return
 
@@ -177,6 +169,13 @@ def print_table(
 ) -> None:
     row_list = list(rows)
     fields = get_output_fields()
+    if json_output:
+        if fields is not None:
+            source_list = list(source_rows) if source_rows is not None else row_list
+            row_list = [project_row(row, fields) for row in source_list]
+        render_json(row_list, include_raw=raw_output, apply_output_fields=False)
+        return
+
     append_fields = get_append_output_fields()
     if fields is not None:
         source_list = list(source_rows) if source_rows is not None else row_list
@@ -189,10 +188,6 @@ def print_table(
             for row, source in zip(row_list, source_list, strict=True)
         ]
         columns = append_projected_columns(append_fields, columns)
-
-    if json_output:
-        render_json(row_list, include_raw=raw_output, apply_output_fields=False)
-        return
 
     table = Table(title=title, title_style="accent", border_style="grey35")
     for header, style in columns:
